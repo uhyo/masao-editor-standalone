@@ -1,6 +1,4 @@
-import {
-    combineReducers,
-} from 'redux';
+import combineReducers from './combineReducers';
 
 import modeReducer from './mode';
 

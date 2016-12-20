@@ -1,6 +1,10 @@
 import * as React from 'react';
 import * as masao from 'masao';
 
+import {
+    Mode,
+} from '../reducer/mode';
+
 import MasaoEditorCore from 'masao-editor-core';
 
 const defaultValue = masao.format.make({
@@ -174,15 +178,26 @@ const defaultValue = masao.format.make({
     }
 });
 
-export default class EditorComponent extends React.Component<{mode: string;}, {}>{
+interface IPropEditorComponent{
+    mode: Mode;
+    requestTestplay(game: any): void;
+}
+export default class EditorComponent extends React.Component<IPropEditorComponent, {}>{
     render(){
         // TODO
+        const externalCommands = [{
+            label: 'テストプレイ',
+            request: (game: any)=>{
+                this.props.requestTestplay(game);
+            },
+        }];
         return <div>
             <p>mode is... {this.props.mode}</p>
             <MasaoEditorCore
                 filename_mapchip="mapchip.gif"
                 filename_pattern="pattern.gif"
                 defaultGame={defaultValue}
+                externalCommands={externalCommands}
             />
         </div>;
     }

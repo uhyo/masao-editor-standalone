@@ -1,17 +1,23 @@
 import * as React from 'react';
+
+import {
+    Mode,
+} from '../reducer/mode';
 import {
     connect,
-} from 'react-redux';
+} from '../store';
 
 
 import EditorComponent from '../component/editor';
 
-class MasaoEditor extends React.Component<{
-    mode: string;
-}, {}>{
-    render(){
-        return <EditorComponent mode={this.props.mode}/>;
-    }
-}
-
-export default connect(({mode})=> ({mode}))(MasaoEditor);
+export default connect(
+    ({mode})=> ({mode}),
+    (dispatch)=>({
+        requestTestplay(game: any){
+            dispatch({
+                type: 'testplay',
+                game,
+            });
+        },
+    })
+)(EditorComponent);

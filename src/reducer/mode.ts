@@ -2,9 +2,9 @@ import {
     Action,
 } from '../action';
 
-export type State = 'main' | 'testplay';
+export type Mode = 'main' | 'testplay';
 
-export default function modeReducer(state: State, action: Action): State{
+export default function modeReducer(state: Mode, action: Action): Mode{
     if (action.type === 'testplay'){
         return 'testplay';
     }
