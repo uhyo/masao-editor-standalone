@@ -3,16 +3,21 @@ import {
     createStore,
     Store,
     Reducer,
+    applyMiddleware,
 } from 'redux';
 import {
     connect as reduxConnect,
 } from 'react-redux';
+
+const reduxLogic: any = require('redux-logic');
 
 import {
     Action,
 } from '../action/index';
 
 import reducer from '../reducer/index';
+
+import logics from '../logic/index';
 
 // wrapper of react-redux connect()
 interface Connect<S>{
@@ -31,5 +36,8 @@ function makeConnect<S>(_reducer: Reducer<S>): Connect<S>{
 
 export const connect = makeConnect(reducer);
 
-export default createStore(reducer);
+// redux-logic
+const logicMiddleware = reduxLogic.createLogicMiddleware(logics);
+
+export default createStore(reducer, applyMiddleware(logicMiddleware));
 
