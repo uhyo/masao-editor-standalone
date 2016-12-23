@@ -6,6 +6,7 @@ const changed = require('gulp-changed');
 
 const uglify = require('gulp-uglify');
 const replace = require('gulp-replace');
+const tcm = require('gulp-typed-css-modules');
 
 const server = require('gulp-server-livereload');
 
@@ -19,6 +20,24 @@ gulp.task('jsx', ()=>{
 gulp.task('watch-jsx', ()=>{
     return jsxCompiler(true);
 });
+
+// ---------- html
+gulp.task('html', ()=>{
+    return gulp.src(['./html/*.html'])
+    .pipe(changed('dist/'))
+    .pipe(gulp.dest('dist/'));
+});
+
+// ---------- css
+// typed css modules.
+gulp.task('css', ()=>{
+    return gulp.src(['./src/**/*.css'])
+    .pipe(changed('./', {extension: '.css.d.ts'}))
+    .pipe(tcm({
+        camelCase: true,
+    }))
+    .pipe(gulp.dest('./src'));
+})
 
 // ---------- static assets
 gulp.task('static', ()=>{
@@ -35,7 +54,7 @@ gulp.task("mc_canvas-static",function(){
 });
 
 gulp.task('mc_canvas-uglify',function(){
-    return gulp.src(["mc_canvas/Outputs/CanvasMasao.js","mc_canvas/Outputs/CanvasMasao_v28.js"])
+    return gulp.src(["mc_canvas/Outputs/CanvasMasao.js","mc_canvas/Outputs/CanvasMasao_v28.js", "mc_canvas/Outputs/MasaoKani2_manual.js"])
     .pipe(changed("dist/"))
     .pipe(uglify())
     .pipe(gulpif(function(file){
@@ -44,11 +63,7 @@ gulp.task('mc_canvas-uglify',function(){
     .pipe(gulp.dest("dist/"));
 });
 
-gulp.task('mc_canvas',['mc_canvas-static','mc_canvas-uglify'],function(){
-    return gulp.src(["dist/CanvasMasao.js","dist/CanvasMasao_v28.js"])
-    .pipe(concat("CanvasMasao.min.js"))
-    .pipe(gulp.dest("dist/"));
-});
+gulp.task('mc_canvas', ['mc_canvas-static','mc_canvas-uglify']);
 
 // ---------- server
 gulp.task('server', ()=>{
@@ -62,9 +77,10 @@ gulp.task('server', ()=>{
 });
 // ----------
 
-gulp.task('default', ['jsx', 'static', 'mc_canvas']);
-gulp.task('watch', ['watch-jsx', 'server'], ()=>{
+gulp.task('default', ['html', 'css', 'jsx', 'static', 'mc_canvas']);
+gulp.task('watch', ['html', 'mc_canvas', 'css', 'watch-jsx', 'server'], ()=>{
     gulp.watch('html/*', ['html']);
+    gulp.watch('src/**/*.css', ['css']);
 });
 
 // ----------

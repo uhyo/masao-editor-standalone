@@ -1,9 +1,6 @@
 import * as React from 'react';
 
 import {
-    Mode,
-} from '../reducer/mode';
-import {
     connect,
 } from '../store';
 
@@ -13,9 +10,10 @@ import EditorComponent from '../component/editor';
 export default connect(
     ({mode})=> ({mode}),
     (dispatch)=>({
-        requestTestplay(game: any){
+        requestTestplay(game: any, startStage: number){
             dispatch({
                 type: 'testplay',
+                startStage,
                 game,
             });
         },
