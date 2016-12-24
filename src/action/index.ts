@@ -1,7 +1,9 @@
 import {
+    MainScreenAction,
+} from './mode';
+import {
     TestplayAction,
-    EndTestplayAction,
 } from './testplay';
 
 
-export type Action = TestplayAction | EndTestplayAction;
+export type Action = MainScreenAction | TestplayAction;

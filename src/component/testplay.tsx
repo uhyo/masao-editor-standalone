@@ -11,7 +11,6 @@ import Game from './game';
 import * as styles from './css/testplay.css';
  
 interface IPropTestplay extends TestplayData{
-    onFinish(): void;
 }
 
 export default class TestplayComponent extends React.Component<IPropTestplay, {}>{
@@ -19,7 +18,6 @@ export default class TestplayComponent extends React.Component<IPropTestplay, {}
         const {
             startStage,
             game,
-            onFinish,
         } = this.props;
         const {
             Button,
@@ -36,9 +34,6 @@ export default class TestplayComponent extends React.Component<IPropTestplay, {}
         return <div className={styles.wrapper}>
             <div className={styles.gameContainer}>
                 <Game game={game2} />
-            </div>
-            <div className={styles.tools}>
-                <Button label="テストプレイを終了" onClick={onFinish}/>
             </div>
         </div>;
     }

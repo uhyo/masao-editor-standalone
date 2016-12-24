@@ -3,7 +3,3 @@ export interface TestplayAction {
     startStage: number;
     game: any;
 }
-
-export interface EndTestplayAction {
-    type: 'end-testplay';
-}

@@ -1,12 +1,15 @@
 import * as React from 'react';
 import * as masao from 'masao';
 
+import * as styles from './css/editor.css';
+
 import {
     Mode,
 } from '../reducer/mode';
 
 import MasaoEditorCore, { EditState } from 'masao-editor-core';
 
+import MenuComponent from '../component/menu';
 import TestplayContainer from '../container/testplay';
 
 const defaultValue = masao.format.make({
@@ -173,7 +176,7 @@ const defaultValue = masao.format.make({
         "se_switch": "1",
         "se_filename": "1"
     },
-    version: "kani2",
+    version: "fx16",
     metadata: {
         title: "サンプルゲーム1",
         author: "福田直人"
@@ -182,34 +185,59 @@ const defaultValue = masao.format.make({
 
 interface IPropEditorComponent{
     mode: Mode;
+    requestEditor(): void;
     requestTestplay(game: any, startStage: number): void;
 }
 export default class EditorComponent extends React.Component<IPropEditorComponent, {}>{
+    constructor(props: IPropEditorComponent){
+        super(props);
+        this.handleTestplay = this.handleTestplay.bind(this);
+        this.handleSave = this.handleSave.bind(this);
+    }
     render(){
         const {
+            requestEditor,
             mode,
         } = this.props;
-        const externalCommands = [{
-            label: 'テストプレイ',
-            request: (game: any, {edit}: {edit: EditState})=>{
-                const core = this.refs["core"] as MasaoEditorCore;
-                this.props.requestTestplay(game, edit.stage);
-            },
-        }];
 
         let testplay = null;
         if (mode === 'testplay'){
-            testplay = <TestplayContainer/>;
+            testplay = <div className={styles.screen}><TestplayContainer/></div>;
         }
-        return <div>
-            <MasaoEditorCore
-                ref="core"
-                filename_mapchip="mapchip.gif"
-                filename_pattern="pattern.gif"
-                defaultGame={defaultValue}
-                externalCommands={externalCommands}
-            />
-            {testplay}
+        return <div className={styles.wrapper}>
+            <div className={styles.menu}>
+                <MenuComponent
+                    mode={mode}
+                    requestEditor={requestEditor}
+                    requestTestplay={this.handleTestplay}
+                    requestSave={this.handleSave}
+                />
+            </div>
+            <div className={styles.content}>
+                <div className={styles.editor}>
+                    <MasaoEditorCore
+                        ref="core"
+                        filename_mapchip="mapchip.gif"
+                        filename_pattern="pattern.gif"
+                        defaultGame={defaultValue}
+                    />
+                </div>
+                {testplay}
+            </div>
         </div>;
+    }
+    // メニューからの入力
+    private handleTestplay(){
+        const core = this.refs['core'] as MasaoEditorCore;
+        const game = core.getCurrentGame();
+        const stage = core.getCurrentStage();
+
+        this.props.requestTestplay(game, stage);
+    }
+    private handleSave(){
+        const core = this.refs['core'] as MasaoEditorCore;
+        const game = core.getCurrentGame();
+
+        console.log(game);
     }
 }
