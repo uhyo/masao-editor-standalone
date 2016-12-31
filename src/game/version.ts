@@ -9,3 +9,4 @@ export function acceptVersion(version: string): '2.8' | 'fx16' | 'kani2'{
     }
     return '2.8';
 }
+

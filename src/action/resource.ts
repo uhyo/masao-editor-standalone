@@ -12,6 +12,10 @@ export interface Resource extends ResourceWithoutId{
 }
 
 // ロードを要求
+export interface LoadFingerprintAction{
+    type: 'load-fingerprint';
+    fingerprint?: string;
+}
 export interface LoadResourcesAction{
     type: 'request-load-resources';
 }
@@ -57,6 +61,7 @@ export interface DeletedResourceAction{
 }
 
 export type ResourceActions =
+    LoadFingerprintAction |
     LoadResourcesAction |
     AddResourcesAction |
     DeleteResourceAction |

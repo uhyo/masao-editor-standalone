@@ -10,12 +10,19 @@ import EditorComponent from '../component/editor';
 export default connect(
     ({
         mode,
+        resource,
         media,
     })=> ({
         mode,
+        resource,
         media,
     }),
     (dispatch)=>({
+        requestInit(){
+            dispatch({
+                type: 'load-fingerprint',
+            });
+        },
         requestEditor(){
             dispatch({
                 type: 'main-screen',

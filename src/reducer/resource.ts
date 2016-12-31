@@ -11,6 +11,8 @@ export {
 };
 
 export interface ResourceData{
+    // ブラウザに与えられたID
+    fingerprint: string | undefined;
     // ロード中か
     loading: boolean;
     // 表示サイズ
@@ -20,6 +22,7 @@ export interface ResourceData{
 }
 
 const initialData: ResourceData = {
+    fingerprint: undefined,
     loading: false,
     size: 'middle',
     resources: [],
@@ -30,6 +33,12 @@ export default function (state = initialData, action: Action): ResourceData{
         return {
             ...state,
             size: action.size,
+        };
+    }
+    if (action.type === 'load-fingerprint'){
+        return {
+            ...state,
+            fingerprint: action.fingerprint,
         };
     }
     if (action.type === 'resources-load-started'){

@@ -9,10 +9,10 @@ import {
 
 import {
     acceptVersion,
-} from './version';
+} from '../../game/version';
 import {
     addResource,
-} from './param';
+} from '../../game/param';
 
 import * as styles from './css.css';
 

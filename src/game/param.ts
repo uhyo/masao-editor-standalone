@@ -3,7 +3,7 @@ import {
 } from 'masao';
 import {
     MediaData,
-} from '../../reducer/media';
+} from '../reducer/media';
 
 const defaults: Record<string, string> = {
     filename_chizu: 'chizu.gif',
@@ -18,7 +18,7 @@ const defaults: Record<string, string> = {
     filename_title: 'title.gif',
 };
 
-export function addResource(_mode: 'testplay', params: Record<string, string>, media: MediaData): Record<string, string>{
+export function addResource(mode: 'testplay' | 'save', params: Record<string, string>, media: MediaData): Record<string, string>{
     // リソースのデータを作る
     const adds: Record<string, string> = {};
 
@@ -27,7 +27,11 @@ export function addResource(_mode: 'testplay', params: Record<string, string>, m
         if (d == null){
             adds[key] = defaults[key] || '';
         }else{
-            adds[key] = d.url || defaults[key] || '';
+            if (mode === 'testplay'){
+                adds[key] = d.url || defaults[key] || '';
+            }else{
+                adds[key] = d.name || defaults[key] || '';
+            }
         }
     }
     return {

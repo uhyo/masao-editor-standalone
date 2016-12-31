@@ -2,6 +2,7 @@ import {
     createLogic,
 } from './redux';
 import {
+    LoadFingerprintAction,
     LoadResourcesAction,
     AddResourcesAction,
     DeleteResourceAction,
@@ -11,9 +12,15 @@ import {
     SetMediaAction,
 } from '../action/media';
 
+import randomString from '../util/random-string';
+
+// --- Indexed Database
 const DATABASE_NAME = 'masaoeditor';
 // objectStore
 const OS_RESOURCE = 'resource';
+
+// --- LocalStorage
+const FINGERPRINT_KEY = '_masaoeditor_fingerprint';
 
 function openDatabase(): Promise<IDBDatabase>{
     return new Promise((resolve, reject)=>{
@@ -39,6 +46,26 @@ function openDatabase(): Promise<IDBDatabase>{
         };
     });
 }
+
+const loadFingerprintLogic = createLogic<LoadFingerprintAction>({
+    type: 'load-fingerprint',
+    transform({action}, next){
+        if (action.fingerprint == undefined){
+            let fingerprint = localStorage.getItem(FINGERPRINT_KEY);
+            if (fingerprint == null){
+                // 新しいfingerprintを生成
+                fingerprint = randomString();
+                localStorage.setItem(FINGERPRINT_KEY, fingerprint);
+            }
+            next({
+                ...action,
+                fingerprint,
+            });
+        }else{
+            next(action);
+        }
+    },
+});
 
 const loadResourceLogic = createLogic<LoadResourcesAction>({
     type: 'request-load-resources',
@@ -224,6 +251,7 @@ const setMediaLogic = createLogic<SetMediaAction>({
 });
 
 export default [
+    loadFingerprintLogic,
     loadResourceLogic,
     addResourcesLogic,
     deleteResourceLogic,

@@ -7,6 +7,9 @@ import {
     Mode,
 } from '../reducer/mode';
 import {
+    ResourceData,
+} from '../reducer/resource';
+import {
     MediaData,
 } from '../reducer/media';
 
@@ -15,6 +18,15 @@ import MasaoEditorCore, { EditState } from 'masao-editor-core';
 import MenuComponent from '../component/menu';
 import TestplayContainer from '../container/testplay';
 import ResourceContainer from '../container/resource';
+
+import {
+    addResource,
+} from '../game/param';
+import {
+    addEditorInfo,
+} from '../game/format';
+
+import download from '../util/download';
 
 const defaultValue = masao.format.make({
     params: {
@@ -189,8 +201,10 @@ const defaultValue = masao.format.make({
 
 interface IPropEditorComponent{
     mode: Mode;
+    resource: ResourceData;
     media: MediaData;
 
+    requestInit(): void;
     requestEditor(): void;
     requestResource(): void;
     requestTestplay(game: any, startStage: number): void;
@@ -200,6 +214,9 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         super(props);
         this.handleTestplay = this.handleTestplay.bind(this);
         this.handleSave = this.handleSave.bind(this);
+    }
+    componentDidMount(){
+        this.props.requestInit();
     }
     render(){
         const {
@@ -249,7 +266,8 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
             </div>
         </div>;
     }
-    // メニューからの入力
+    // ------ メニューからの入力
+    // テストプレイボタン
     private handleTestplay(){
         const core = this.refs['core'] as MasaoEditorCore;
         const game = core.getCurrentGame();
@@ -257,10 +275,25 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
 
         this.props.requestTestplay(game, stage);
     }
+    // 保存ボタン
     private handleSave(){
+        const {
+            resource,
+            media,
+        } = this.props;
         const core = this.refs['core'] as MasaoEditorCore;
-        const game = core.getCurrentGame();
+        const game1 = core.getCurrentGame();
 
-        console.log(game);
+        game1.params = addResource('save', game1.params, this.props.media);
+
+        const game = addEditorInfo(game1, resource, media);
+
+        // ファイルにして保存してもらう
+        const blob = new Blob([JSON.stringify(game)], {
+            type: 'application/json',
+        });
+
+        // TODO
+        download('game.json', blob);
     }
 }
