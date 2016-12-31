@@ -8,7 +8,7 @@ import {
 
 import * as masao from 'masao';
 
-export default createLogic<TestplayAction>({
+const testplayLogic = createLogic<TestplayAction>({
     type: 'testplay',
     transform({action}, allow, reject){
         // invalidなやつを除くぞ
@@ -24,3 +24,7 @@ export default createLogic<TestplayAction>({
         }
     }
 });
+
+export default [
+    testplayLogic,
+];

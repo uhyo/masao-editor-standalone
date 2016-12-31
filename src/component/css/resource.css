@@ -1,0 +1,113 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+
+  background-color: white;
+}
+
+.desc {
+  color: #444444;
+
+  h1 {
+    margin: 0;
+
+    color: #666666;
+    font-size: 1.6em;
+  }
+  p {
+    font-size: 0.85em;
+  }
+}
+
+.resource-list {
+  margin: 1ex;
+
+  display: flex;
+  flex-flow: row wrap;
+}
+.resource-child {
+  margin: 1ex;
+  flex: 20ex 0 0;
+  width: 20ex;
+}
+.resource-child-big {
+  composes: resource-child;
+  flex: 40ex 0 0;
+  width: 40px;
+}
+
+.single-resource {
+  width: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: #f5f5f5;
+}
+.single-resource-name {
+  flex: auto 0 0;
+  box-sizing: border-box;
+
+  background-color: #eeeeee;
+  color: #333333;
+  padding: 3px 3px 3px 1ex;
+  margin: 0 0 2px 0;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.single-resource-img {
+  flex: auto 1 0;
+  max-height: 19ex;
+  overflow: auto;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+.single-resource-img-big {
+  composes: single-resource-img;
+  max-height: 38ex;
+}
+
+.single-resource-control {
+}
+
+.param-list {
+  display: flex;
+}
+
+.list-wrapper {
+  border: 1px solid #cccccc;
+  height: 14em;
+  overflow-y: auto;
+}
+
+.list-content {
+  box-sizing: border-box;
+  border-bottom: 1px solid #eeeeee;
+  padding: 2px 0.6ex 2px 1ex;
+  height: 1.4em;
+  line-height: 1.2em;
+
+  cursor: default;
+}
+
+.list-content-current {
+  composes: list-content;
+
+  background-color: #66ff66;
+}
+
+.media-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.media-item {
+  flex: auto 0 0;
+  margin: 0 1em;
+}

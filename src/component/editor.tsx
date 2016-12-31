@@ -6,11 +6,15 @@ import * as styles from './css/editor.css';
 import {
     Mode,
 } from '../reducer/mode';
+import {
+    MediaData,
+} from '../reducer/media';
 
 import MasaoEditorCore, { EditState } from 'masao-editor-core';
 
 import MenuComponent from '../component/menu';
 import TestplayContainer from '../container/testplay';
+import ResourceContainer from '../container/resource';
 
 const defaultValue = masao.format.make({
     params: {
@@ -185,7 +189,10 @@ const defaultValue = masao.format.make({
 
 interface IPropEditorComponent{
     mode: Mode;
+    media: MediaData;
+
     requestEditor(): void;
+    requestResource(): void;
     requestTestplay(game: any, startStage: number): void;
 }
 export default class EditorComponent extends React.Component<IPropEditorComponent, {}>{
@@ -197,18 +204,34 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
     render(){
         const {
             requestEditor,
+            requestResource,
             mode,
+            media,
         } = this.props;
 
-        let testplay = null;
+        let subpain = null;
         if (mode === 'testplay'){
-            testplay = <div className={styles.screen}><TestplayContainer/></div>;
+            subpain = <div className={styles.screen}><TestplayContainer/></div>;
+        }else if (mode === 'resource'){
+            subpain = <div className={styles.screen}><ResourceContainer/></div>;
         }
+
+        // 画像の情報
+        const urlFor = (media: MediaData, param: string, def: string)=>{
+            const o = media.data[param];
+            if (o == null || o.url == null){
+                return def;
+            }
+            return o.url;
+        };
+        const filename_pattern = urlFor(media, 'filename_pattern', 'pattern.gif');
+        const filename_mapchip = urlFor(media, 'filename_mapchip', 'mapchip.gif');
         return <div className={styles.wrapper}>
             <div className={styles.menu}>
                 <MenuComponent
                     mode={mode}
                     requestEditor={requestEditor}
+                    requestResource={requestResource}
                     requestTestplay={this.handleTestplay}
                     requestSave={this.handleSave}
                 />
@@ -217,12 +240,12 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                 <div className={styles.editor}>
                     <MasaoEditorCore
                         ref="core"
-                        filename_mapchip="mapchip.gif"
-                        filename_pattern="pattern.gif"
+                        filename_mapchip={filename_mapchip}
+                        filename_pattern={filename_pattern}
                         defaultGame={defaultValue}
                     />
                 </div>
-                {testplay}
+                {subpain}
             </div>
         </div>;
     }

@@ -7,5 +7,11 @@ import {
 import TestplayComponent from '../component/testplay';
 
 export default connect(
-    ({testplay})=>({...testplay}),
+    ({
+        testplay,
+        media,
+    })=>({
+        ...testplay,
+        media,
+    }),
 )(TestplayComponent);

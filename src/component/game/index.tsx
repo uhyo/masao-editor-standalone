@@ -4,13 +4,21 @@ import * as React from 'react';
 import randomString from '../../util/random-string';
 
 import {
+    MediaData,
+} from '../../reducer/media';
+
+import {
     acceptVersion,
 } from './version';
+import {
+    addResource,
+} from './param';
 
 import * as styles from './css.css';
 
 interface IPropGame{
     game: any;
+    media: MediaData;
 }
 
 export default class Game extends React.Component<IPropGame, {}>{
@@ -43,6 +51,7 @@ export default class Game extends React.Component<IPropGame, {}>{
             gameid,
             props: {
                 game,
+                media,
             },
         } = this;
 
@@ -57,21 +66,11 @@ export default class Game extends React.Component<IPropGame, {}>{
         const ujc = game.script ? `window['userJSCallback'] || null` : 'null';
 
         const params2 = {
-            ...(game.params),
+            ...addResource('testplay', game.params, media),
 
             // TODO
             fx_bgm_switch: '2',
             se_switch: '2',
-            filename_chizu: 'chizu.gif',
-            filename_ending: 'ending.gif',
-            filename_gameover: 'gameover.gif',
-            filename_haikei: 'haikei.gif',
-            filename_haikei2: 'haikei.gif',
-            filename_haikei3: 'haikei.gif',
-            filename_haikei4: 'haikei.gif',
-            filename_mapchip: 'mapchip.gif',
-            filename_pattern: 'pattern.gif',
-            filename_title: 'title.gif',
         };
 
         const params = JSON.stringify(params2);

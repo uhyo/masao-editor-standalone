@@ -5,12 +5,16 @@ import {uis} from 'masao-editor-core';
 import {
     TestplayData,
 } from '../reducer/testplay';
+import {
+    MediaData,
+} from '../reducer/media';
 
 import Game from './game';
 
 import * as styles from './css/testplay.css';
  
 interface IPropTestplay extends TestplayData{
+    media: MediaData;
 }
 
 export default class TestplayComponent extends React.Component<IPropTestplay, {}>{
@@ -18,6 +22,7 @@ export default class TestplayComponent extends React.Component<IPropTestplay, {}
         const {
             startStage,
             game,
+            media,
         } = this.props;
         const {
             Button,
@@ -33,7 +38,7 @@ export default class TestplayComponent extends React.Component<IPropTestplay, {}
         };
         return <div className={styles.wrapper}>
             <div className={styles.gameContainer}>
-                <Game game={game2} />
+                <Game game={game2} media={media}/>
             </div>
         </div>;
     }

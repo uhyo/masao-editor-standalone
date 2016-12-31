@@ -12,7 +12,7 @@ interface Reducer<S>{
 }
 
 interface CombineReducersFunction{
-    <D>(reducers: {[K in keyof D]: Reducer<D[K]>}): Reducer<D>;
+    <D>(reducers: {[K in keyof D]: Reducer<D[K] | undefined>}): Reducer<D>;
 }
 
 const combineReducers: CombineReducersFunction = reduxCombineReducers;
