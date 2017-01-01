@@ -32,6 +32,9 @@ import {
 import {
     addEditorInfo,
 } from '../game/format';
+import {
+    gameToHTML,
+} from '../game/html';
 
 import download from '../util/download';
 
@@ -56,6 +59,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         this.handleTestplay = this.handleTestplay.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.handleFileAccept = this.handleFileAccept.bind(this);
+        this.handleHTML = this.handleHTML.bind(this);
     }
     componentDidMount(){
         this.props.requestInit();
@@ -94,6 +98,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                     requestResource={requestResource}
                     requestTestplay={this.handleTestplay}
                     requestSave={this.handleSave}
+                    requestHTML={this.handleHTML}
                 />
             </div>
             <div className={styles.content}>
@@ -138,6 +143,26 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         });
 
         download('game.json', blob);
+    }
+    // HTMLの出力を要求された
+    private handleHTML(){
+        const {
+            resource,
+            media,
+        } = this.props;
+
+        const core = this.refs['core'] as MasaoEditorCore;
+        const game1 = core.getCurrentGame();
+
+        game1.params = addResource('save', game1.params, this.props.media);
+        const game = addEditorInfo(game1, resource, media);
+        const html = gameToHTML(game);
+
+        const blob = new Blob([html], {
+            type: 'text/html',
+        });
+
+        download('game.html', blob);
     }
     // ファイルがドロップされた
     private handleFileAccept(files: Array<File>){

@@ -12,6 +12,7 @@ interface IPropMenu{
     requestTestplay(): void;
     requestResource(): void;
     requestSave(): void;
+    requestHTML(): void;
 }
 
 export default class MenuComponent extends React.Component<IPropMenu, {}>{
@@ -22,6 +23,7 @@ export default class MenuComponent extends React.Component<IPropMenu, {}>{
             requestTestplay,
             requestResource,
             requestSave,
+            requestHTML,
         } = this.props;
         const cls = (m: Mode)=> (m === mode ? styles.active : styles.button);
         return <div className={styles.wrapper}>
@@ -29,6 +31,7 @@ export default class MenuComponent extends React.Component<IPropMenu, {}>{
             <div onClick={requestTestplay} className={cls('testplay')}>テストプレイ</div>
             <div onClick={requestResource} className={cls('resource')}>リソース</div>
             <div onClick={requestSave} className={styles.button}>JSON保存</div>
+            <div onClick={requestHTML} className={styles.button}>HTML出力</div>
         </div>;
     }
 }
