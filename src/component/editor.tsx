@@ -4,6 +4,9 @@ import * as masao from 'masao';
 import * as styles from './css/editor.css';
 
 import {
+    ResourceWithoutId,
+} from '../action/resource';
+import {
     Mode,
 } from '../reducer/mode';
 import {
@@ -15,7 +18,8 @@ import {
 
 import MasaoEditorCore, { EditState } from 'masao-editor-core';
 
-import MenuComponent from '../component/menu';
+import MenuComponent from './menu';
+import DropComponent from './drop';
 import TestplayContainer from '../container/testplay';
 import ResourceContainer from '../container/resource';
 
@@ -208,12 +212,15 @@ interface IPropEditorComponent{
     requestEditor(): void;
     requestResource(): void;
     requestTestplay(game: any, startStage: number): void;
+
+    addFiles(resources: Array<ResourceWithoutId>): void;
 }
 export default class EditorComponent extends React.Component<IPropEditorComponent, {}>{
     constructor(props: IPropEditorComponent){
         super(props);
         this.handleTestplay = this.handleTestplay.bind(this);
         this.handleSave = this.handleSave.bind(this);
+        this.handleFileAccept = this.handleFileAccept.bind(this);
     }
     componentDidMount(){
         this.props.requestInit();
@@ -264,6 +271,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                 </div>
                 {subpain}
             </div>
+            <DropComponent requestFileAccept={this.handleFileAccept}/>
         </div>;
     }
     // ------ メニューからの入力
@@ -293,7 +301,13 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
             type: 'application/json',
         });
 
-        // TODO
         download('game.json', blob);
+    }
+    // ファイルがドロップされた
+    private handleFileAccept(files: Array<File>){
+        this.props.addFiles(files.map(file=>({
+            filename: file.name,
+            blob: file,
+        })));
     }
 }

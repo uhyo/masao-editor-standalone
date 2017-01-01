@@ -1,0 +1,33 @@
+.wrapper {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+
+  z-index: 15;
+
+  border: 30px dashed #bbbbbb;
+
+  background-color: rgba(255, 255, 255, .8);
+
+  color: #898989;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+.message {
+  font-size: 4rem;
+  font-weight: bold;
+}
+.mask {
+  position: absolute;
+  left: -30px;
+  top: -30px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+}

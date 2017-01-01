@@ -4,6 +4,9 @@ import {
     connect,
 } from '../store';
 
+import {
+    ResourceWithoutId,
+} from '../action/resource';
 
 import EditorComponent from '../component/editor';
 
@@ -38,6 +41,12 @@ export default connect(
                 type: 'testplay',
                 startStage,
                 game,
+            });
+        },
+        addFiles(resources: Array<ResourceWithoutId>){
+            dispatch({
+                type: 'add-resources',
+                resources,
             });
         },
     })
