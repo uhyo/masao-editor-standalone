@@ -59,6 +59,9 @@ export default connect(
                 type: 'load-game',
                 game,
             });
+            dispatch({
+                type: 'main-screen',
+            });
         },
     })
 )(EditorComponent);
