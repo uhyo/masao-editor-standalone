@@ -42,5 +42,11 @@ export default function(state = initialData, action: Action): MediaData{
             },
         };
     }
+    if (action.type === 'reset-media'){
+        return {
+            ...state,
+            data: {},
+        };
+    }
     return state;
 }

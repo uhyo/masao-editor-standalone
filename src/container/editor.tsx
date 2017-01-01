@@ -15,10 +15,12 @@ export default connect(
         mode,
         resource,
         media,
+        game,
     })=> ({
         mode,
         resource,
         media,
+        game,
     }),
     (dispatch)=>({
         requestInit(){
@@ -50,6 +52,12 @@ export default connect(
             });
             dispatch({
                 type: 'resource-screen',
+            });
+        },
+        requestLoadGame(game: any){
+            dispatch({
+                type: 'load-game',
+                game,
             });
         },
     })

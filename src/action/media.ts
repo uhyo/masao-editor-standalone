@@ -17,4 +17,9 @@ export interface UnsetMediaAction{
     param: string;
 }
 
-export type MediaActions = SetMediaAction | UnsetMediaAction;
+// mediaをリセット
+export interface ResetMediaAction{
+    type: 'reset-media';
+}
+
+export type MediaActions = SetMediaAction | UnsetMediaAction | ResetMediaAction;

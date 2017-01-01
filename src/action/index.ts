@@ -14,6 +14,9 @@ import {
 import {
     MediaActions,
 } from './media';
+import {
+    GameActions,
+} from './game';
 
 
 
@@ -22,4 +25,5 @@ export type Action =
     MainScreenAction | ResourceScreenAction |
     TestplayAction |
     ResourceActions |
-    MediaActions;
+    MediaActions |
+    GameActions;

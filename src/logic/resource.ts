@@ -9,9 +9,15 @@ import {
     Resource,
 } from '../action/resource';
 import {
+    LoadGameAction,
+} from '../action/game';
+import {
     SetMediaAction,
 } from '../action/media';
 
+import {
+    getAugment,
+} from '../game/format';
 import randomString from '../util/random-string';
 
 // --- Indexed Database
@@ -250,10 +256,95 @@ const setMediaLogic = createLogic<SetMediaAction>({
     },
 });
 
+const loadGameLogic = createLogic<LoadGameAction>({
+    type: 'load-game',
+    process({action, getState}, dispatch, done){
+        const {
+            game,
+        } = action;
+        const {
+            resource,
+            media,
+        } = getState();
+
+        const augment = getAugment(game);
+
+        dispatch({
+            type: 'reset-media',
+        });
+        if (augment.fingerprint === resource.fingerprint){
+            // fingerprintが一致したからリソースを読み込んでいい
+            openDatabase().then(db=> new Promise((resolve, reject)=>{
+                const tx = db.transaction(OS_RESOURCE, 'readonly');
+                const store = tx.objectStore(OS_RESOURCE);
+                
+                // 指定されたメディア
+                const mds = Object.keys(augment.media);
+                const one: (i: number)=>void = (i: number)=>{
+                    const param = mds[i];
+                    if (param == null){
+                        dispatch({
+                            type: 'got-game',
+                            game,
+                        });
+                        resolve();
+                        return;
+                    }
+                    const mob = augment.media[param];
+                    if (mob == null){
+                        return one(i+1);
+                    }
+                    const {
+                        key,
+                    } = mob;
+                    // keyで指定されたresourceを読み込む
+                    const req = store.get(key);
+                    req.onerror = reject;
+                    req.onsuccess = ()=>{
+                        const obj: Resource = req.result;
+                        if (obj == null){
+                            return one(i+1);
+                        }
+                        // メディアあった
+                        const {
+                            filename: name,
+                            blob,
+                        } = obj;
+                        dispatch({
+                            type: 'set-media',
+                            param,
+                            key,
+                            name,
+                            url: URL.createObjectURL(blob),
+                        });
+                        return one(i+1);
+                    };
+                };
+                one(0);
+            }))
+            .catch(er=>{
+                dispatch({
+                    type: 'error',
+                    message: String(er),
+                });
+            })
+            .then(done);
+        }else{
+            // リソースは一切なし
+            dispatch({
+                type: 'got-game',
+                game,
+            });
+            done();
+        }
+    },
+});
+
 export default [
     loadFingerprintLogic,
     loadResourceLogic,
     addResourcesLogic,
     deleteResourceLogic,
     setMediaLogic,
+    loadGameLogic,
 ];

@@ -51,3 +51,16 @@ export function addEditorInfo(game: any, resource: ResourceData, media: MediaDat
         [NAMESPACE]: augment,
     };
 }
+
+export function getAugment(game: any): Augment{
+    const a = game[NAMESPACE] || {};
+
+    if (a.fingerprint == null){
+        a.fingerprint = null;
+    }
+    if (a.media == null){
+        a.media = {};
+    }
+
+    return a;
+}
