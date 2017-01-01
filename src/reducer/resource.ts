@@ -14,7 +14,7 @@ export interface ResourceData{
     // ブラウザに与えられたID
     fingerprint: string | undefined;
     // ロード中か
-    loading: boolean;
+    status: 'none' | 'loading' | 'loaded';
     // 表示サイズ
     size: SetResourceSizeAction['size'];
     // 読んだリソース
@@ -23,7 +23,7 @@ export interface ResourceData{
 
 const initialData: ResourceData = {
     fingerprint: undefined,
-    loading: false,
+    status: 'none',
     size: 'middle',
     resources: [],
 };
@@ -44,21 +44,25 @@ export default function (state = initialData, action: Action): ResourceData{
     if (action.type === 'resources-load-started'){
         return {
             ...state,
-            loading: true,
+            status: 'loading',
         };
     }
     if (action.type === 'got-resources'){
         return {
             ...state,
-            loading: false,
+            status: 'loaded',
             resources: [...(action.resources)],
         };
     }
     if (action.type === 'new-resources'){
-        return {
-            ...state,
-            resources: [...state.resources, ...(action.resources)],
-        };
+        if (state.status === 'loaded'){
+            return {
+                ...state,
+                resources: [...state.resources, ...(action.resources)],
+            };
+        }else{
+            return state;
+        }
     }
     if (action.type === 'deleted-resource'){
         return {

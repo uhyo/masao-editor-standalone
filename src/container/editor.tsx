@@ -48,6 +48,9 @@ export default connect(
                 type: 'add-resources',
                 resources,
             });
+            dispatch({
+                type: 'resource-screen',
+            });
         },
     })
 )(EditorComponent);

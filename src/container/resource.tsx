@@ -12,13 +12,13 @@ import ResourceComponent from '../component/resource/index';
 export default connect(
     ({
         resource: {
-            loading,
+            status,
             size,
             resources,
         },
         media,
     })=>({
-        loading,
+        status,
         size,
         resources,
         media,

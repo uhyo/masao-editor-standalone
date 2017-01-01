@@ -31,7 +31,7 @@ import fileUpload from './file-upload';
 
 // Resource管理パネル
 interface IPropResource extends ResourceData{
-    loading: boolean;
+    status: ResourceData['status'];
     size: SetResourceSizeAction['size'];
     resources: Array<Resource>;
 
@@ -57,7 +57,7 @@ export default class ResourceComponent extends React.Component<IPropResource, {}
     }
     render(){
         const {
-            loading,
+            status,
             size,
             resources,
             media,
@@ -71,8 +71,8 @@ export default class ResourceComponent extends React.Component<IPropResource, {}
 
         const resourceChildClass = size == 'large' ? styles.resourceChildBig : styles.resourceChild;
 
-        const loadingpanel = loading ? <p>Loading...</p> : null;
-        const resourcepanel = !loading ? <div className={styles.resourceList}>{
+        const loadingpanel = status === 'loading' ? <p>Loading...</p> : null;
+        const resourcepanel = status === 'loaded' ? <div className={styles.resourceList}>{
             resources.map(resource=>{
                 const requestDelete = ()=>{
                     deleteResource(resource.id);
