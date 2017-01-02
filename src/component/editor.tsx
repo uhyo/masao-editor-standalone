@@ -35,6 +35,9 @@ import {
 import {
     gameToHTML,
 } from '../game/html';
+import {
+    loadFileAsGame,
+} from '../game/load';
 
 import download from '../util/download';
 
@@ -181,30 +184,19 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                 })));
                 return;
             }
-            if (f.type !== 'application/json' && !(/\.json$/.test(f.name))){
-                // JSONではない
-                return one(i+1);
-            }
-            // JSONファイルは読む
-            const reader = new FileReader();
-            reader.onload = ()=>{
-                try {
-                    const data = reader.result;
-                    const obj = JSON.parse(data);
-                    const fmt = masao.format.load(obj);
-                    // 正男を読み込めた
-                    requestLoadGame(fmt);
-                }catch (e){
-                    console.error(e);
+            loadFileAsGame(f)
+            .then(game=>{
+                if (game == null){
+                    // gameではなかった
                     one(i+1);
+                    return;
                 }
-            };
-            reader.onerror = (er)=>{
-                // ???
+                // gameがあった
+                requestLoadGame(game);
+            }, er=>{
                 console.error(er);
                 one(i+1);
-            };
-            reader.readAsText(f);
+            });
         };
         one(0);
     }
