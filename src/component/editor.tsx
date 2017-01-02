@@ -18,11 +18,15 @@ import {
 import {
     GameData,
 } from '../reducer/game';
+import {
+    ErrorData,
+} from '../reducer/error';
 
 import MasaoEditorCore, { EditState } from 'masao-editor-core';
 
 import MenuComponent from './menu';
 import DropComponent from './drop';
+import ErrorComponent from './error';
 import TestplayContainer from '../container/testplay';
 import ResourceContainer from '../container/resource';
 
@@ -46,6 +50,7 @@ interface IPropEditorComponent{
     resource: ResourceData;
     media: MediaData;
     game: GameData;
+    error: ErrorData;
 
     requestInit(): void;
     requestEditor(): void;
@@ -55,6 +60,9 @@ interface IPropEditorComponent{
     addFiles(resources: Array<ResourceWithoutId>): void;
 
     requestLoadGame(game: any): void;
+
+    requestError(message: string): void;
+    requestCloseError(): void;
 }
 export default class EditorComponent extends React.Component<IPropEditorComponent, {}>{
     constructor(props: IPropEditorComponent){
@@ -71,9 +79,11 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         const {
             requestEditor,
             requestResource,
+            requestCloseError,
             mode,
             media,
             game,
+            error,
         } = this.props;
 
         let subpain = null;
@@ -81,6 +91,11 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
             subpain = <div className={styles.screen}><TestplayContainer/></div>;
         }else if (mode === 'resource'){
             subpain = <div className={styles.screen}><ResourceContainer/></div>;
+        }
+
+        let errorpain = null;
+        if (error.message){
+            errorpain = <ErrorComponent message={error.message} requestClose={requestCloseError} />;
         }
 
         // 画像の情報
@@ -115,6 +130,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                 </div>
                 {subpain}
             </div>
+            {errorpain}
             <DropComponent requestFileAccept={this.handleFileAccept}/>
         </div>;
     }
@@ -172,6 +188,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         const {
             addFiles,
             requestLoadGame,
+            requestError,
         } = this.props;
         // jsonファイルがあったら怪しい
         const one: (i: number)=>void = (i: number)=>{
@@ -194,8 +211,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                 // gameがあった
                 requestLoadGame(game);
             }, er=>{
-                console.error(er);
-                one(i+1);
+                requestError(String(er));
             });
         };
         one(0);

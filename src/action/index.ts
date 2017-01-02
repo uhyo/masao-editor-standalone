@@ -1,5 +1,5 @@
 import {
-    ErrorAction,
+    ErrorActions,
 } from './error';
 import {
     MainScreenAction,
@@ -21,7 +21,7 @@ import {
 
 
 export type Action =
-    ErrorAction |
+    ErrorActions |
     MainScreenAction | ResourceScreenAction |
     TestplayAction |
     ResourceActions |

@@ -12,11 +12,13 @@ import EditorComponent from '../component/editor';
 
 export default connect(
     ({
+        error,
         mode,
         resource,
         media,
         game,
     })=> ({
+        error,
         mode,
         resource,
         media,
@@ -61,6 +63,17 @@ export default connect(
             });
             dispatch({
                 type: 'main-screen',
+            });
+        },
+        requestError(message: string){
+            dispatch({
+                type: 'error',
+                message,
+            });
+        },
+        requestCloseError(){
+            dispatch({
+                type: 'clear-error',
             });
         },
     })

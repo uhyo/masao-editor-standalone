@@ -5,11 +5,23 @@ export function loadFileAsGame(file: File): Promise<any | null>{
     return new Promise<any | null>((resolve)=>{
         if (file.type === 'application/json' || /\.json$/i.test(file.name)){
             // JSONっぽい
-            resolve(loadText(file).then(loadJSON));
+            resolve(loadText(file).then(loadJSON).then(game=>{
+                if (game == null){
+                    return Promise.reject(new Error(`${file.name}から正男を読み込めませんでした。`));
+                }else{
+                    return game;
+                }
+            }));
             return;
         }
         if (file.type === 'text/html' || /\.html$/i.test(file.name)){
-            resolve(loadText(file).then(loadHTML));
+            resolve(loadText(file).then(loadHTML).then(game=>{
+                if (game == null){
+                    return Promise.reject(new Error(`${file.name}から正男を読み込めませんでした。`));
+                }else{
+                    return game;
+                }
+            }));
             return;
         }
         resolve(null);
