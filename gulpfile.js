@@ -13,11 +13,11 @@ const server = require('gulp-server-livereload');
 const webpack = require('webpack');
 
 // ---------- webpack
-gulp.task('jsx', ()=>{
+gulp.task('jsx', ['css'], ()=>{
     return jsxCompiler(false);
 });
 
-gulp.task('watch-jsx', ()=>{
+gulp.task('watch-jsx', ['css'], ()=>{
     return jsxCompiler(true);
 });
 
@@ -41,7 +41,7 @@ gulp.task('css', ()=>{
 
 // ---------- static assets
 gulp.task('static', ()=>{
-    gulp.src(['./html/*'])
+    return gulp.src(['./html/*'])
     .pipe(changed('dist/'))
     .pipe(gulp.dest('dist/'));
 });
@@ -77,8 +77,8 @@ gulp.task('server', ()=>{
 });
 // ----------
 
-gulp.task('default', ['html', 'css', 'jsx', 'static', 'mc_canvas']);
-gulp.task('watch', ['html', 'mc_canvas', 'css', 'watch-jsx', 'server'], ()=>{
+gulp.task('default', ['html', 'jsx', 'static', 'mc_canvas']);
+gulp.task('watch', ['html', 'mc_canvas', 'watch-jsx', 'server'], ()=>{
     gulp.watch('html/*', ['html']);
     gulp.watch('src/**/*.css', ['css']);
 });
@@ -95,7 +95,7 @@ function jsxCompiler(watch){
       }));
   };
   if (watch){
-      const watching = compiler.watch({
+      return compiler.watch({
       }, (err, stats)=>{
           if (err){
               console.error(err);
@@ -104,7 +104,7 @@ function jsxCompiler(watch){
           handleStats(stats, true);
       });
   }else{
-      compiler.run((err, stats)=>{
+      return compiler.run((err, stats)=>{
           if (err){
               console.error(err);
               return;
