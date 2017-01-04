@@ -83,6 +83,24 @@ export default class ResourceComponent extends React.Component<IPropResource, {}
             })
         }</div> : null;
 
+        const sizeSelect = status === 'loaded' && resources.length > 0 ?
+            <Select contents={[
+                {
+                    key: 'small',
+                    value: '小',
+                }, {
+                    key: 'middle',
+                    value: '中',
+                }, {
+                    key: 'large',
+                    value: '大',
+                }
+            ]} valueLink={{
+                value: size,
+                requestChange: requestSizeChange,
+            }}/> :
+                null;
+
         return <div className={styles.wrapper}>
             <div className={styles.desc}>
                 <h1>リソース選択</h1>
@@ -92,21 +110,7 @@ export default class ResourceComponent extends React.Component<IPropResource, {}
                 <p>リソースは全てブラウザ上に保存されています。</p>
                 <div>
                     <Button label="ファイルを追加" onClick={this.handleAddFile}/>
-                    <Select contents={[
-                        {
-                            key: 'small',
-                            value: '小',
-                        }, {
-                            key: 'middle',
-                            value: '中',
-                        }, {
-                            key: 'large',
-                            value: '大',
-                        }
-                    ]} valueLink={{
-                        value: size,
-                        requestChange: requestSizeChange,
-                    }}/>
+                    {sizeSelect}
                 </div>
             </div>
             {loadingpanel}

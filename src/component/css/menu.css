@@ -25,3 +25,7 @@
 
   background-color: #77778e;
 }
+
+.separator {
+  border-right: 1px solid #9898d9;
+}

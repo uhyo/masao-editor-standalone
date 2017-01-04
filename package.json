@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "gulp default",
+    "production": "NODE_ENV=production gulp default",
     "clean": "del dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

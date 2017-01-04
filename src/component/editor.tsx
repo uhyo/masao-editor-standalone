@@ -71,9 +71,21 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         this.handleSave = this.handleSave.bind(this);
         this.handleFileAccept = this.handleFileAccept.bind(this);
         this.handleHTML = this.handleHTML.bind(this);
+        this.handleNewGame = this.handleNewGame.bind(this);
+
+        this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
     }
     componentDidMount(){
         this.props.requestInit();
+        // イベント
+        if (process.env.NODE_ENV === 'production'){
+            window.addEventListener('beforeunload', this.handleBeforeUnload, false);
+        }
+    }
+    componentWillUnmount(){
+        if (process.env.NODE_ENV === 'production'){
+            window.removeEventListener('beforeunload', this.handleBeforeUnload, false);
+        }
     }
     render(){
         const {
@@ -117,6 +129,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                     requestTestplay={this.handleTestplay}
                     requestSave={this.handleSave}
                     requestHTML={this.handleHTML}
+                    requestNewGame={this.handleNewGame}
                 />
             </div>
             <div className={styles.content}>
@@ -215,5 +228,17 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
             });
         };
         one(0);
+    }
+    private handleNewGame(){
+        // 新規のゲーム
+        this.props.requestLoadGame(
+            masao.format.make({
+                version: 'fx16',
+                params: masao.param.addDefaults({}),
+            })
+        );
+    }
+    private handleBeforeUnload(e: Event){
+        return (e as any).returnValue = '現在編集中の内容は保存されません。';
     }
 }
