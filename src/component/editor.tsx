@@ -154,6 +154,8 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         const game = core.getCurrentGame();
         const stage = core.getCurrentStage();
 
+        game.params = addResource('testplay', game.params, this.props.media);
+
         this.props.requestTestplay(game, stage);
     }
     // 保存ボタン

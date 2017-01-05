@@ -20,7 +20,10 @@ const testplayLogic = createLogic<TestplayAction>({
             });
         }catch (e){
             console.error(e);
-            reject();
+            reject({
+                type: 'error',
+                message: String(e),
+            });
         }
     }
 });
