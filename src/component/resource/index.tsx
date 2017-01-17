@@ -87,18 +87,15 @@ export default class ResourceComponent extends React.Component<IPropResource, {}
             <Select contents={[
                 {
                     key: 'small',
-                    value: '小',
+                    label: '小',
                 }, {
                     key: 'middle',
-                    value: '中',
+                    label: '中',
                 }, {
                     key: 'large',
-                    value: '大',
+                    label: '大',
                 }
-            ]} valueLink={{
-                value: size,
-                requestChange: requestSizeChange,
-            }}/> :
+            ]} value={size} onChange={requestSizeChange}/> :
                 null;
 
         return <div className={styles.wrapper}>
