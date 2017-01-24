@@ -46,7 +46,8 @@ module.exports={
     plugins,
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        modules: [path.resolve(__dirname, 'node_modules')],
+        // こうしないとなぜかReactがこわれる
+        modules: [path.resolve(__dirname, 'node_modules'), 'node_modules'],
     },
     performance: {
         //bye bye, FIXME...
