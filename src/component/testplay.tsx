@@ -1,6 +1,4 @@
 import * as React from 'react';
-import {uis} from 'masao-editor-core';
-
 
 import {
     TestplayData,
@@ -24,9 +22,6 @@ export default class TestplayComponent extends React.Component<IPropTestplay, {}
             game,
             media,
         } = this.props;
-        const {
-            Button,
-        } = uis;
 
         // 開始ステージをアレする
         const game2 = {

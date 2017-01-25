@@ -2,6 +2,7 @@
 import * as React from 'react';
 
 import randomString from '../../util/random-string';
+import * as masao from 'masao';
 
 import {
     MediaData,
@@ -17,7 +18,7 @@ import {
 import * as styles from './css.css';
 
 interface IPropGame{
-    game: any;
+    game: masao.format.MasaoJSONFormat;
     media: MediaData;
 }
 
@@ -65,6 +66,9 @@ export default class Game extends React.Component<IPropGame, {}>{
         const ext = version === 'kani2' ? 'CanvasMasao.MasaoKani2' : '';
         const ujc = game.script ? `window['userJSCallback'] || null` : 'null';
 
+        // advance-map
+        const adv = game['advanced-map'] ? JSON.stringify(game['advanced-map']) : 'null';
+
         const params2 = {
             ...addResource('testplay', game.params, media),
 
@@ -80,6 +84,7 @@ ${game.script || ''}
 window['${glb_game_name}'] = new ${ctr}.Game(${params}, '${gameid}', {
     extensions: [${ext}],
     userJSCallback: ${ujc},
+    'advance-map': ${adv},
 });`;
         this.scriptElement = document.createElement('script');
         this.scriptElement.textContent = script;
