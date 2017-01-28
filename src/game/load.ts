@@ -15,7 +15,7 @@ export function loadFileAsGame(file: File): Promise<any | null>{
             return;
         }
         if (file.type === 'text/html' || /\.html?$/i.test(file.name)){
-            resolve(loadText(file).then(loadHTML).then(game=>{
+            resolve(loadText(file).then(masao.load.html).then(game=>{
                 if (game == null){
                     return Promise.reject(new Error(`${file.name}から正男を読み込めませんでした。`));
                 }else{
