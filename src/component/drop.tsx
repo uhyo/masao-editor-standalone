@@ -43,13 +43,19 @@ export default class DropComponent extends React.Component<IPropDrop, IStateDrop
         </div>;
     }
     private handleDragEnter(e: DragEvent){
+        // ファイル以外は無視
+        const dt = e.dataTransfer;
         if (this.state.open){
+            return;
+        }
+        if (!Array.from(dt.items).some(({kind})=> kind === 'file')){
+            // ファイルがないのは無視
             return;
         }
         this.setState({
             open: true,
         });
-        e.dataTransfer.effectAllowed = 'copy';
+        dt.effectAllowed = 'copy';
     }
     private handleDragOver(e: React.DragEvent<HTMLDivElement>){
         e.preventDefault();
@@ -67,7 +73,8 @@ export default class DropComponent extends React.Component<IPropDrop, IStateDrop
         this.setState({
             open: false,
         });
-        const files = Array.from(e.dataTransfer.files);
+        // const files = Array.from(e.dataTransfer.files);
+        const files = Array.from(e.dataTransfer.items).map(obj=> obj.getAsFile()).filter(obj=> obj != null) as Array<File>;
 
         if (files.length > 0){
             this.props.requestFileAccept(files);
