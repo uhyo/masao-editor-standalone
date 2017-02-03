@@ -25,6 +25,11 @@ module.exports={
     module: {
         loaders: [
             {
+                test: /\.js$/,
+                loader: 'source-map-loader',
+                enforce: 'pre',
+            },
+            {
                 test: /\.tsx?$/,
                 exclude: /node_modules|\.d\.ts$/,
                 loader: 'awesome-typescript-loader',
