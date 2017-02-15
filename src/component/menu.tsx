@@ -11,6 +11,7 @@ interface IPropMenu{
     requestEditor(): void;
     requestTestplay(): void;
     requestResource(): void;
+    requestKey(): void;
 
     requestNewGame(): void;
     requestSave(): void;
@@ -24,6 +25,7 @@ export default class MenuComponent extends React.Component<IPropMenu, {}>{
             requestEditor,
             requestTestplay,
             requestResource,
+            requestKey,
 
             requestNewGame,
             requestSave,
@@ -38,6 +40,8 @@ export default class MenuComponent extends React.Component<IPropMenu, {}>{
             <div onClick={requestNewGame} className={styles.button}>新規</div>
             <div onClick={requestSave} className={styles.button}>JSON保存</div>
             <div onClick={requestHTML} className={styles.button}>HTML出力</div>
+            <div className={styles.separator} />
+            <div onClick={requestKey} className={cls('key')}>キー設定</div>
         </div>;
     }
 }

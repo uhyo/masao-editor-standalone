@@ -47,6 +47,11 @@ export default connect(
                 game,
             });
         },
+        requestKey(){
+            dispatch({
+                type: 'key-screen',
+            });
+        },
         addFiles(resources: Array<ResourceWithoutId>){
             dispatch({
                 type: 'add-resources',

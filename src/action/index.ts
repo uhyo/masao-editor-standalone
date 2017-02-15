@@ -2,8 +2,7 @@ import {
     ErrorActions,
 } from './error';
 import {
-    MainScreenAction,
-    ResourceScreenAction,
+    ScreenAction,
 } from './mode';
 import {
     TestplayAction,
@@ -22,7 +21,7 @@ import {
 
 export type Action =
     ErrorActions |
-    MainScreenAction | ResourceScreenAction |
+    ScreenAction |
     TestplayAction |
     ResourceActions |
     MediaActions |

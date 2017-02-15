@@ -22,13 +22,17 @@ import {
     ErrorData,
 } from '../reducer/error';
 
-import MasaoEditorCore, { EditState } from 'masao-editor-core';
+import MasaoEditorCore, {
+    EditState,
+    Command,
+} from 'masao-editor-core';
 
 import MenuComponent from './menu';
 import DropComponent from './drop';
 import ErrorComponent from './error';
 import TestplayContainer from '../container/testplay';
 import ResourceContainer from '../container/resource';
+import KeyScreenComponent from '../component/key';
 
 import {
     addResource,
@@ -56,6 +60,7 @@ interface IPropEditorComponent{
     requestEditor(): void;
     requestResource(): void;
     requestTestplay(game: any, startStage: number): void;
+    requestKey(): void;
 
     addFiles(resources: Array<ResourceWithoutId>): void;
 
@@ -64,7 +69,10 @@ interface IPropEditorComponent{
     requestError(message: string): void;
     requestCloseError(): void;
 }
-export default class EditorComponent extends React.Component<IPropEditorComponent, {}>{
+interface IStateEditorComponent{
+    keyBinding: Record<string, Command>;
+}
+export default class EditorComponent extends React.Component<IPropEditorComponent, IStateEditorComponent>{
     constructor(props: IPropEditorComponent){
         super(props);
         this.handleTestplay = this.handleTestplay.bind(this);
@@ -74,6 +82,10 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         this.handleNewGame = this.handleNewGame.bind(this);
 
         this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
+
+        this.state = {
+            keyBinding: {},
+        };
     }
     componentDidMount(){
         this.props.requestInit();
@@ -81,28 +93,40 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         if (process.env.NODE_ENV === 'production'){
             window.addEventListener('beforeunload', this.handleBeforeUnload, false);
         }
+
+        const keyBinding = (this.refs['core'] as MasaoEditorCore).getKeyConfig();
+        this.setState({
+            keyBinding,
+        });
     }
     componentWillUnmount(){
         if (process.env.NODE_ENV === 'production'){
             window.removeEventListener('beforeunload', this.handleBeforeUnload, false);
         }
+
     }
     render(){
         const {
             requestEditor,
             requestResource,
             requestCloseError,
+            requestKey,
             mode,
             media,
             game,
             error,
         } = this.props;
+        const {
+            keyBinding,
+        } = this.state;
 
         let subpain = null;
         if (mode === 'testplay'){
             subpain = <div className={styles.screen}><TestplayContainer/></div>;
         }else if (mode === 'resource'){
             subpain = <div className={styles.screen}><ResourceContainer/></div>;
+        }else if (mode === 'key'){
+            subpain = <div className={styles.screen}><KeyScreenComponent binding={keyBinding}/></div>;
         }
 
         let errorpain = null;
@@ -127,6 +151,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                     requestEditor={requestEditor}
                     requestResource={requestResource}
                     requestTestplay={this.handleTestplay}
+                    requestKey={requestKey}
                     requestSave={this.handleSave}
                     requestHTML={this.handleHTML}
                     requestNewGame={this.handleNewGame}
