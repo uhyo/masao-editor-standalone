@@ -46,6 +46,10 @@ module.exports={
                 test: /\.html$/,
                 loaders: ['ignore-loader', 'file-loader?name=[name].[ext]'],
             },
+            {
+                test: /\.(?:png|gif)$/,
+                loaders: ['url-loader', 'img-loader'],
+            }
         ]
     },
     plugins,
