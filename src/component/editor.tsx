@@ -161,6 +161,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                 <div className={styles.editor}>
                     <MasaoEditorCore
                         ref="core"
+                        backupId="standalone_editor"
                         filename_mapchip={filename_mapchip}
                         filename_pattern={filename_pattern}
                         defaultGame={game.game}
