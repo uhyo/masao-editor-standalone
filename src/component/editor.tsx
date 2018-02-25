@@ -144,7 +144,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         };
         const filename_pattern = urlFor(media, 'filename_pattern', 'pattern.gif');
         const filename_mapchip = urlFor(media, 'filename_mapchip', 'mapchip.gif');
-        return <div className={styles.wrapper}>
+        return (<div className={styles.wrapper}>
             <div className={styles.menu}>
                 <MenuComponent
                     mode={mode}
@@ -165,13 +165,15 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                         filename_mapchip={filename_mapchip}
                         filename_pattern={filename_pattern}
                         defaultGame={game.game}
+                        className={styles.editorInner}
+                        fit-y
                     />
                 </div>
                 {subpain}
             </div>
             {errorpain}
             <DropComponent requestFileAccept={this.handleFileAccept}/>
-        </div>;
+        </div>);
     }
     // ------ メニューからの入力
     // テストプレイボタン

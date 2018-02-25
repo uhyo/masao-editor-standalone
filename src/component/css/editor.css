@@ -11,14 +11,24 @@
 }
 
 .content {
+  flex: auto 1 0;
+  display: flex;
+  flex-flow: column nowrap;
+
   position: relative;
   left: 0;
   top: 0;
-  flex: auto 1 0;
 }
 
 .editor {
-  padding: 0.8em;
+  flex: auto 1 0;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 0;
+}
+
+.editor-inner {
+  flex: auto 1 0;
 }
 
 .screen {
