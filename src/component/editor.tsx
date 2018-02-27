@@ -25,6 +25,7 @@ import {
 import MasaoEditorCore, {
     EditState,
     Command,
+    ExternalCommand,
 } from 'masao-editor-core';
 
 import MenuComponent from './menu';
@@ -81,6 +82,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
         this.handleHTML = this.handleHTML.bind(this);
         this.handleNewGame = this.handleNewGame.bind(this);
 
+        this.handleCommand = this.handleCommand.bind(this);
         this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
 
         this.state = {
@@ -122,16 +124,16 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
 
         let subpain = null;
         if (mode === 'testplay'){
-            subpain = <div className={styles.screen}><TestplayContainer/></div>;
+            subpain = (<div className={styles.screen}><TestplayContainer/></div>);
         }else if (mode === 'resource'){
-            subpain = <div className={styles.screen}><ResourceContainer/></div>;
+            subpain = (<div className={styles.screen}><ResourceContainer/></div>);
         }else if (mode === 'key'){
-            subpain = <div className={styles.screen}><KeyScreenComponent binding={keyBinding}/></div>;
+            subpain = (<div className={styles.screen}><KeyScreenComponent binding={keyBinding}/></div>);
         }
 
         let errorpain = null;
         if (error.message){
-            errorpain = <ErrorComponent message={error.message} requestClose={requestCloseError} />;
+            errorpain = (<ErrorComponent message={error.message} requestClose={requestCloseError} />);
         }
 
         // 画像の情報
@@ -167,6 +169,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                         defaultGame={game.game}
                         className={styles.editorInner}
                         fit-y
+                        onCommand={this.handleCommand}
                     />
                 </div>
                 {subpain}
@@ -267,6 +270,30 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                 params: masao.param.addDefaults({}),
             })
         );
+    }
+    /**
+     * Handle a command from the editor.
+     */
+    protected handleCommand(command: ExternalCommand): void {
+        switch (command.type) {
+            case 'testplay': {
+                // Testplay is requested.
+                const {
+                    game,
+                    stage,
+                } = command;
+                this.props.requestTestplay(game, stage);
+                break;
+            }
+            case 'escape': {
+                // escape.
+                if (this.props.mode === 'testplay') {
+                    // テストプレイからエディタへの遷移
+                    this.props.requestEditor();
+                }
+                break;
+            }
+        }
     }
     private handleBeforeUnload(e: Event){
         return (e as any).returnValue = '現在編集中の内容は保存されません。';
