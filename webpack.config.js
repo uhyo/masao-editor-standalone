@@ -2,28 +2,16 @@
 const path = require('path');
 const webpack = require('webpack');
 
-// production用の設定がある
-const plugins = 
-    process.env.NODE_ENV === 'production' ?
-    [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('production')
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-        }),
-    ] :
-    [];
-
 module.exports={
-    devtool: 'source-map',
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    devtool: process.env.NODE_ENV === 'production' ? undefined : 'source-map',
     entry: './src/entrypoint.tsx',
     output: {
         path: path.join(__dirname, 'dist'),
         filename: 'bundle.js',
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js$/,
                 loader: 'source-map-loader',
@@ -39,10 +27,6 @@ module.exports={
                 loaders: ['style-loader', 'css-loader?modules&camelCase', 'postcss-loader'],
             },
             {
-                test: /\.json$/,
-                loaders: ['json-loader'],
-            },
-            {
                 test: /\.html$/,
                 loaders: ['ignore-loader', 'file-loader?name=[name].[ext]'],
             },
@@ -52,7 +36,6 @@ module.exports={
             }
         ]
     },
-    plugins,
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
         // こうしないとなぜかReactがこわれる
