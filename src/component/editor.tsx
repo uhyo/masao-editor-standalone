@@ -169,6 +169,7 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                         defaultGame={game.game}
                         className={styles.editorInner}
                         fit-y
+                        keyDisabled={subpain != null}
                         onCommand={this.handleCommand}
                     />
                 </div>
