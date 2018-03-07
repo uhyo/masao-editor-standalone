@@ -4,7 +4,7 @@ const gulp = require('gulp');
 const gulpif = require('gulp-if');
 const changed = require('gulp-changed');
 
-const uglify = require('gulp-uglify');
+const uglifyComposer = require('gulp-uglify/composer');
 const replace = require('gulp-replace');
 const tcm = require('gulp-typed-css-modules');
 
@@ -52,6 +52,8 @@ gulp.task("mc_canvas-static",function(){
     .pipe(changed("dist/"))
     .pipe(gulp.dest("dist/"));
 });
+
+const uglify = uglifyComposer(require('uglify-es'), console);
 
 gulp.task('mc_canvas-uglify',function(){
     return gulp.src(["mc_canvas/Outputs/CanvasMasao.js","mc_canvas/Outputs/CanvasMasao_v28.js", "mc_canvas/Outputs/MasaoKani2_manual.js"])
