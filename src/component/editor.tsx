@@ -60,7 +60,7 @@ interface IPropEditorComponent{
     requestInit(): void;
     requestEditor(): void;
     requestResource(): void;
-    requestTestplay(game: any, startStage: number): void;
+    requestTestplay(game: masao.format.MasaoJSONFormat, startStage: number): void;
     requestKey(): void;
 
     addFiles(resources: Array<ResourceWithoutId>): void;
@@ -293,6 +293,16 @@ export default class EditorComponent extends React.Component<IPropEditorComponen
                     this.props.requestEditor();
                 }
                 break;
+            }
+            case 'save': {
+                // 保存コマンド
+                if (command.kind === 'default' || command.kind === 'json') {
+                    // JSONで保存
+                    this.handleSave();
+                } else {
+                    // HTMLで保存
+                    this.handleHTML();
+                }
             }
         }
     }

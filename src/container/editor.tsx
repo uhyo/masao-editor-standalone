@@ -9,6 +9,7 @@ import {
 } from '../action/resource';
 
 import EditorComponent from '../component/editor';
+import * as masao from 'masao';
 
 export default connect(
     ({
