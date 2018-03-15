@@ -1,41 +1,48 @@
 // html出力
-import {
-    acceptVersion,
-} from './version';
-import {
-    param,
-    format,
-} from 'masao';
+import { acceptVersion } from './version';
+import { param, format } from 'masao';
 
 type AdvancedMap = format.MasaoJSONFormat['advanced-map'];
-export function gameToHTML(game: format.MasaoJSONFormat): string{
-    const v = acceptVersion(game.version);
-    const cvs = ['CanvasMasao.js'];
-    if (v === 'kani2'){
-        cvs.push('MasaoKani2.js');
-    }
+export function gameToHTML(game: format.MasaoJSONFormat): string {
+  const v = acceptVersion(game.version);
+  const cvs = ['CanvasMasao.js'];
+  if (v === 'kani2') {
+    cvs.push('MasaoKani2.js');
+  }
 
-    let params = param.cutDefaults(game.params);
-    let advanced: AdvancedMap = void 0;
-    if (game['advanced-map'] != null){
-        params = param.cutUnadvancedData(params);
-        advanced = game['advanced-map'];
-    }
+  let params = param.cutDefaults(game.params);
+  let advanced: AdvancedMap = void 0;
+  if (game['advanced-map'] != null) {
+    params = param.cutUnadvancedData(params);
+    advanced = game['advanced-map'];
+  }
 
-    return htmlTemplate(cvs, params, advanced);
+  return htmlTemplate(cvs, params, advanced);
 }
 
+function htmlTemplate(
+  scripts: Array<string>,
+  params: Record<string, string>,
+  advanced: AdvancedMap,
+  userScript?: string,
+): string {
+  const scripttags = scripts
+    .map(src => `<script src="${encodeURIComponent(src)}"></script>`)
+    .join('\n');
+  const userJSCallback =
+    'string' === typeof userScript
+      ? `userJSCallback: 'undefined' !== typeof userJSCallback ? userJSCallback : null,\n`
+      : '';
 
-function htmlTemplate(scripts: Array<string>, params: Record<string, string>, advanced: AdvancedMap, userScript?: string): string{
-    const scripttags = scripts.map(src=> `<script src="${encodeURIComponent(src)}"></script>`).join('\n');
-    const userJSCallback = 'string' === typeof userScript ? `userJSCallback: 'undefined' !== typeof userJSCallback ? userJSCallback : null,\n` : '';
+  const adv =
+    advanced != null ? `'advance-map': ${JSON.stringify(advanced)},\n` : '';
 
-    const adv = advanced != null ? `'advance-map': ${JSON.stringify(advanced)},\n` : '';
-
-    const gamescript = `${userScript ? userScript+';' : ''}new CanvasMasao.Game(${jsFriendlyJSONStringify(params, 2)}, null, {
+  const gamescript = `${
+    userScript ? userScript + ';' : ''
+  }new CanvasMasao.Game(${jsFriendlyJSONStringify(params, 2)}, null, {
     ${userJSCallback}${adv}
 });`;
-    return `<!doctype html>
+  return `<!doctype html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -93,7 +100,7 @@ ${gamescript}
 
 // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 function jsFriendlyJSONStringify(s: any, space: any) {
-    return JSON.stringify(s, null, space).
-        replace(/\u2028/g, '\\u2028').
-        replace(/\u2029/g, '\\u2029');
+  return JSON.stringify(s, null, space)
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
 }

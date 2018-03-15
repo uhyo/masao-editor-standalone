@@ -1,18 +1,14 @@
 // wrapper of redux's combineReducers
-import {
-    combineReducers as reduxCombineReducers,
-} from 'redux';
+import { combineReducers as reduxCombineReducers } from 'redux';
 
-import {
-    Action,
-} from '../action/index';
+import { Action } from '../action/index';
 
-interface Reducer<S>{
-    (state: S, action: Action): S;
+interface Reducer<S> {
+  (state: S, action: Action): S;
 }
 
-interface CombineReducersFunction{
-    <D>(reducers: {[K in keyof D]: Reducer<D[K] | undefined>}): Reducer<D>;
+interface CombineReducersFunction {
+  <D>(reducers: { [K in keyof D]: Reducer<D[K] | undefined> }): Reducer<D>;
 }
 
 const combineReducers: CombineReducersFunction = reduxCombineReducers;

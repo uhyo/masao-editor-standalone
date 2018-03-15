@@ -4,10 +4,14 @@ import * as ReactDOM from 'react-dom';
 import MasaoEditor from './container/index';
 const id = 'app';
 
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener(
+  'DOMContentLoaded',
+  () => {
     const apparea = document.getElementById(id);
 
-    const root = <MasaoEditor/>;
+    const root = <MasaoEditor />;
 
     ReactDOM.render(root, apparea);
-}, false);
+  },
+  false,
+);

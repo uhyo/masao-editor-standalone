@@ -3,29 +3,17 @@ import * as masao from 'masao';
 
 import * as styles from './css/editor.css';
 
-import {
-    ResourceWithoutId,
-} from '../action/resource';
-import {
-    Mode,
-} from '../reducer/mode';
-import {
-    ResourceData,
-} from '../reducer/resource';
-import {
-    MediaData,
-} from '../reducer/media';
-import {
-    GameData,
-} from '../reducer/game';
-import {
-    ErrorData,
-} from '../reducer/error';
+import { ResourceWithoutId } from '../action/resource';
+import { Mode } from '../reducer/mode';
+import { ResourceData } from '../reducer/resource';
+import { MediaData } from '../reducer/media';
+import { GameData } from '../reducer/game';
+import { ErrorData } from '../reducer/error';
 
 import MasaoEditorCore, {
-    EditState,
-    Command,
-    ExternalCommand,
+  EditState,
+  Command,
+  ExternalCommand,
 } from 'masao-editor-core';
 
 import MenuComponent from './menu';
@@ -35,278 +23,284 @@ import TestplayContainer from '../container/testplay';
 import ResourceContainer from '../container/resource';
 import KeyScreenComponent from '../component/key';
 
-import {
-    addResource,
-} from '../game/param';
-import {
-    addEditorInfo,
-} from '../game/format';
-import {
-    gameToHTML,
-} from '../game/html';
-import {
-    loadFileAsGame,
-} from '../game/load';
+import { addResource } from '../game/param';
+import { addEditorInfo } from '../game/format';
+import { gameToHTML } from '../game/html';
+import { loadFileAsGame } from '../game/load';
 
 import download from '../util/download';
 
-interface IPropEditorComponent{
-    mode: Mode;
-    resource: ResourceData;
-    media: MediaData;
-    game: GameData;
-    error: ErrorData;
+interface IPropEditorComponent {
+  mode: Mode;
+  resource: ResourceData;
+  media: MediaData;
+  game: GameData;
+  error: ErrorData;
 
-    requestInit(): void;
-    requestEditor(): void;
-    requestResource(): void;
-    requestTestplay(game: masao.format.MasaoJSONFormat, startStage: number): void;
-    requestKey(): void;
+  requestInit(): void;
+  requestEditor(): void;
+  requestResource(): void;
+  requestTestplay(game: masao.format.MasaoJSONFormat, startStage: number): void;
+  requestKey(): void;
 
-    addFiles(resources: Array<ResourceWithoutId>): void;
+  addFiles(resources: Array<ResourceWithoutId>): void;
 
-    requestLoadGame(game: any): void;
+  requestLoadGame(game: any): void;
 
-    requestError(message: string): void;
-    requestCloseError(): void;
+  requestError(message: string): void;
+  requestCloseError(): void;
 }
-interface IStateEditorComponent{
-    keyBinding: Record<string, Command>;
+interface IStateEditorComponent {
+  keyBinding: Record<string, Command>;
 }
-export default class EditorComponent extends React.Component<IPropEditorComponent, IStateEditorComponent>{
-    constructor(props: IPropEditorComponent){
-        super(props);
-        this.handleTestplay = this.handleTestplay.bind(this);
-        this.handleSave = this.handleSave.bind(this);
-        this.handleFileAccept = this.handleFileAccept.bind(this);
-        this.handleHTML = this.handleHTML.bind(this);
-        this.handleNewGame = this.handleNewGame.bind(this);
+export default class EditorComponent extends React.Component<
+  IPropEditorComponent,
+  IStateEditorComponent
+> {
+  constructor(props: IPropEditorComponent) {
+    super(props);
+    this.handleTestplay = this.handleTestplay.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleFileAccept = this.handleFileAccept.bind(this);
+    this.handleHTML = this.handleHTML.bind(this);
+    this.handleNewGame = this.handleNewGame.bind(this);
 
-        this.handleCommand = this.handleCommand.bind(this);
-        this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
+    this.handleCommand = this.handleCommand.bind(this);
+    this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
 
-        this.state = {
-            keyBinding: {},
-        };
+    this.state = {
+      keyBinding: {},
+    };
+  }
+  componentDidMount() {
+    this.props.requestInit();
+    // イベント
+    if (process.env.NODE_ENV === 'production') {
+      window.addEventListener('beforeunload', this.handleBeforeUnload, false);
     }
-    componentDidMount(){
-        this.props.requestInit();
-        // イベント
-        if (process.env.NODE_ENV === 'production'){
-            window.addEventListener('beforeunload', this.handleBeforeUnload, false);
-        }
 
-        const keyBinding = (this.refs['core'] as MasaoEditorCore).getKeyConfig();
-        this.setState({
-            keyBinding,
-        });
+    const keyBinding = (this.refs['core'] as MasaoEditorCore).getKeyConfig();
+    this.setState({
+      keyBinding,
+    });
+  }
+  componentWillUnmount() {
+    if (process.env.NODE_ENV === 'production') {
+      window.removeEventListener(
+        'beforeunload',
+        this.handleBeforeUnload,
+        false,
+      );
     }
-    componentWillUnmount(){
-        if (process.env.NODE_ENV === 'production'){
-            window.removeEventListener('beforeunload', this.handleBeforeUnload, false);
-        }
+  }
+  render() {
+    const {
+      requestEditor,
+      requestResource,
+      requestCloseError,
+      requestKey,
+      mode,
+      media,
+      game,
+      error,
+    } = this.props;
+    const { keyBinding } = this.state;
 
+    let subpain = null;
+    if (mode === 'testplay') {
+      subpain = (
+        <div className={styles.screen}>
+          <TestplayContainer />
+        </div>
+      );
+    } else if (mode === 'resource') {
+      subpain = (
+        <div className={styles.screen}>
+          <ResourceContainer />
+        </div>
+      );
+    } else if (mode === 'key') {
+      subpain = (
+        <div className={styles.screen}>
+          <KeyScreenComponent binding={keyBinding} />
+        </div>
+      );
     }
-    render(){
-        const {
-            requestEditor,
-            requestResource,
-            requestCloseError,
-            requestKey,
-            mode,
-            media,
-            game,
-            error,
-        } = this.props;
-        const {
-            keyBinding,
-        } = this.state;
 
-        let subpain = null;
-        if (mode === 'testplay'){
-            subpain = (<div className={styles.screen}><TestplayContainer/></div>);
-        }else if (mode === 'resource'){
-            subpain = (<div className={styles.screen}><ResourceContainer/></div>);
-        }else if (mode === 'key'){
-            subpain = (<div className={styles.screen}><KeyScreenComponent binding={keyBinding}/></div>);
-        }
-
-        let errorpain = null;
-        if (error.message){
-            errorpain = (<ErrorComponent message={error.message} requestClose={requestCloseError} />);
-        }
-
-        // 画像の情報
-        const urlFor = (media: MediaData, param: string, def: string)=>{
-            const o = media.data[param];
-            if (o == null || o.url == null){
-                return def;
-            }
-            return o.url;
-        };
-        const filename_pattern = urlFor(media, 'filename_pattern', 'pattern.gif');
-        const filename_mapchip = urlFor(media, 'filename_mapchip', 'mapchip.gif');
-        return (<div className={styles.wrapper}>
-            <div className={styles.menu}>
-                <MenuComponent
-                    mode={mode}
-                    requestEditor={requestEditor}
-                    requestResource={requestResource}
-                    requestTestplay={this.handleTestplay}
-                    requestKey={requestKey}
-                    requestSave={this.handleSave}
-                    requestHTML={this.handleHTML}
-                    requestNewGame={this.handleNewGame}
-                />
-            </div>
-            <div className={styles.content}>
-                <div className={styles.editor}>
-                    <MasaoEditorCore
-                        ref="core"
-                        backupId="standalone_editor"
-                        filename_mapchip={filename_mapchip}
-                        filename_pattern={filename_pattern}
-                        defaultGame={game.game}
-                        className={styles.editorInner}
-                        fit-y
-                        keyDisabled={subpain != null}
-                        onCommand={this.handleCommand}
-                    />
-                </div>
-                {subpain}
-            </div>
-            {errorpain}
-            <DropComponent requestFileAccept={this.handleFileAccept}/>
-        </div>);
+    let errorpain = null;
+    if (error.message) {
+      errorpain = (
+        <ErrorComponent
+          message={error.message}
+          requestClose={requestCloseError}
+        />
+      );
     }
-    // ------ メニューからの入力
-    // テストプレイボタン
-    private handleTestplay(){
-        const core = this.refs['core'] as MasaoEditorCore;
-        const game = core.getCurrentGame();
-        const stage = core.getCurrentStage();
 
-        game.params = addResource('testplay', game.params, this.props.media);
+    // 画像の情報
+    const urlFor = (media: MediaData, param: string, def: string) => {
+      const o = media.data[param];
+      if (o == null || o.url == null) {
+        return def;
+      }
+      return o.url;
+    };
+    const filename_pattern = urlFor(media, 'filename_pattern', 'pattern.gif');
+    const filename_mapchip = urlFor(media, 'filename_mapchip', 'mapchip.gif');
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.menu}>
+          <MenuComponent
+            mode={mode}
+            requestEditor={requestEditor}
+            requestResource={requestResource}
+            requestTestplay={this.handleTestplay}
+            requestKey={requestKey}
+            requestSave={this.handleSave}
+            requestHTML={this.handleHTML}
+            requestNewGame={this.handleNewGame}
+          />
+        </div>
+        <div className={styles.content}>
+          <div className={styles.editor}>
+            <MasaoEditorCore
+              ref="core"
+              backupId="standalone_editor"
+              filename_mapchip={filename_mapchip}
+              filename_pattern={filename_pattern}
+              defaultGame={game.game}
+              className={styles.editorInner}
+              fit-y
+              keyDisabled={subpain != null}
+              onCommand={this.handleCommand}
+            />
+          </div>
+          {subpain}
+        </div>
+        {errorpain}
+        <DropComponent requestFileAccept={this.handleFileAccept} />
+      </div>
+    );
+  }
+  // ------ メニューからの入力
+  // テストプレイボタン
+  private handleTestplay() {
+    const core = this.refs['core'] as MasaoEditorCore;
+    const game = core.getCurrentGame();
+    const stage = core.getCurrentStage();
 
-        this.props.requestTestplay(game, stage);
-    }
-    // 保存ボタン
-    private handleSave(){
-        const {
-            resource,
-            media,
-        } = this.props;
-        const core = this.refs['core'] as MasaoEditorCore;
-        const game1 = core.getCurrentGame();
+    game.params = addResource('testplay', game.params, this.props.media);
 
-        game1.params = addResource('save', game1.params, this.props.media);
+    this.props.requestTestplay(game, stage);
+  }
+  // 保存ボタン
+  private handleSave() {
+    const { resource, media } = this.props;
+    const core = this.refs['core'] as MasaoEditorCore;
+    const game1 = core.getCurrentGame();
 
-        const game = addEditorInfo(game1, resource, media);
+    game1.params = addResource('save', game1.params, this.props.media);
 
-        // ファイルにして保存してもらう
-        const blob = new Blob([JSON.stringify(game)], {
-            type: 'application/json',
-        });
+    const game = addEditorInfo(game1, resource, media);
 
-        download('game.json', blob);
-    }
-    // HTMLの出力を要求された
-    private handleHTML(){
-        const {
-            resource,
-            media,
-        } = this.props;
+    // ファイルにして保存してもらう
+    const blob = new Blob([JSON.stringify(game)], {
+      type: 'application/json',
+    });
 
-        const core = this.refs['core'] as MasaoEditorCore;
-        const game1 = core.getCurrentGame();
+    download('game.json', blob);
+  }
+  // HTMLの出力を要求された
+  private handleHTML() {
+    const { resource, media } = this.props;
 
-        game1.params = addResource('save', game1.params, this.props.media);
-        const game = addEditorInfo(game1, resource, media);
-        const html = gameToHTML(game);
+    const core = this.refs['core'] as MasaoEditorCore;
+    const game1 = core.getCurrentGame();
 
-        const blob = new Blob([html], {
-            type: 'text/html',
-        });
+    game1.params = addResource('save', game1.params, this.props.media);
+    const game = addEditorInfo(game1, resource, media);
+    const html = gameToHTML(game);
 
-        download('game.html', blob);
-    }
-    // ファイルがドロップされた
-    private handleFileAccept(files: Array<File>){
-        const {
-            addFiles,
-            requestLoadGame,
-            requestError,
-        } = this.props;
-        // jsonファイルがあったら怪しい
-        const one: (i: number)=>void = (i: number)=>{
-            const f = files[i];
-            if (f == null){
-                // 全部見たぞ
-                addFiles(files.map(file=>({
-                    filename: file.name,
-                    blob: file,
-                })));
-                return;
-            }
-            loadFileAsGame(f)
-            .then(game=>{
-                if (game == null){
-                    // gameではなかった
-                    one(i+1);
-                    return;
-                }
-                // gameがあった
-                requestLoadGame(game);
-            }, er=>{
-                requestError(String(er));
-            });
-        };
-        one(0);
-    }
-    private handleNewGame(){
-        // 新規のゲーム
-        this.props.requestLoadGame(
-            masao.format.make({
-                version: 'fx16',
-                params: masao.param.addDefaults({}),
-            })
+    const blob = new Blob([html], {
+      type: 'text/html',
+    });
+
+    download('game.html', blob);
+  }
+  // ファイルがドロップされた
+  private handleFileAccept(files: Array<File>) {
+    const { addFiles, requestLoadGame, requestError } = this.props;
+    // jsonファイルがあったら怪しい
+    const one: (i: number) => void = (i: number) => {
+      const f = files[i];
+      if (f == null) {
+        // 全部見たぞ
+        addFiles(
+          files.map(file => ({
+            filename: file.name,
+            blob: file,
+          })),
         );
-    }
-    /**
-     * Handle a command from the editor.
-     */
-    protected handleCommand(command: ExternalCommand): void {
-        switch (command.type) {
-            case 'testplay': {
-                // Testplay is requested.
-                const {
-                    game,
-                    stage,
-                } = command;
-                this.props.requestTestplay(game, stage);
-                break;
-            }
-            case 'escape': {
-                // escape.
-                if (this.props.mode === 'testplay') {
-                    // テストプレイからエディタへの遷移
-                    this.props.requestEditor();
-                }
-                break;
-            }
-            case 'save': {
-                // 保存コマンド
-                if (command.kind === 'default' || command.kind === 'json') {
-                    // JSONで保存
-                    this.handleSave();
-                } else {
-                    // HTMLで保存
-                    this.handleHTML();
-                }
-            }
+        return;
+      }
+      loadFileAsGame(f).then(
+        game => {
+          if (game == null) {
+            // gameではなかった
+            one(i + 1);
+            return;
+          }
+          // gameがあった
+          requestLoadGame(game);
+        },
+        er => {
+          requestError(String(er));
+        },
+      );
+    };
+    one(0);
+  }
+  private handleNewGame() {
+    // 新規のゲーム
+    this.props.requestLoadGame(
+      masao.format.make({
+        version: 'fx16',
+        params: masao.param.addDefaults({}),
+      }),
+    );
+  }
+  /**
+   * Handle a command from the editor.
+   */
+  protected handleCommand(command: ExternalCommand): void {
+    switch (command.type) {
+      case 'testplay': {
+        // Testplay is requested.
+        const { game, stage } = command;
+        this.props.requestTestplay(game, stage);
+        break;
+      }
+      case 'escape': {
+        // escape.
+        if (this.props.mode === 'testplay') {
+          // テストプレイからエディタへの遷移
+          this.props.requestEditor();
         }
+        break;
+      }
+      case 'save': {
+        // 保存コマンド
+        if (command.kind === 'default' || command.kind === 'json') {
+          // JSONで保存
+          this.handleSave();
+        } else {
+          // HTMLで保存
+          this.handleHTML();
+        }
+      }
     }
-    private handleBeforeUnload(e: Event){
-        return (e as any).returnValue = '現在編集中の内容は保存されません。';
-    }
+  }
+  private handleBeforeUnload(e: Event) {
+    return ((e as any).returnValue = '現在編集中の内容は保存されません。');
+  }
 }

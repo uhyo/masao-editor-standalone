@@ -1,5 +1,5 @@
-
-export default function randomString(){
-    return Math.random().toString(36).slice(2);
+export default function randomString() {
+  return Math.random()
+    .toString(36)
+    .slice(2);
 }
-

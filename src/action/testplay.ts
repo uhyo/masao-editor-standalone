@@ -1,5 +1,5 @@
 export interface TestplayAction {
-    type: 'testplay';
-    startStage: number;
-    game: any;
+  type: 'testplay';
+  startStage: number;
+  game: any;
 }
