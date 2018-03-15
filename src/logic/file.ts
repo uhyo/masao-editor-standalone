@@ -11,6 +11,7 @@ import {
   DATABASE_NAME,
   OS_FILE,
   IDX_FILE_LASTMODIFIED,
+  LAST_ID_KEY,
   openDatabase,
 } from './db';
 
@@ -83,6 +84,8 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
             // update or insert
             const res = store.put(file);
             res.onsuccess = () => {
+              // これが最新なのでlocalStorageにIDを保存
+              localStorage.setItem(LAST_ID_KEY, id);
               resolve();
               const { file: { status } } = getState();
               if (status === 'loading') {

@@ -65,7 +65,7 @@ export default connect(
         game,
       });
     },
-    requestLoadGame(game: any) {
+    requestLoadGame(game: MasaoJSONFormat) {
       dispatch({
         type: 'load-game',
         game,

@@ -25,6 +25,16 @@ export const OS_FILE = 'file';
 export const IDX_FILE_LASTMODIFIED = 'lastModified';
 
 /**
+ * Key of localStorage for browser fingerprint.
+ */
+export const FINGERPRINT_KEY = '_masaoeditor_fingerprint';
+
+/**
+ * Key of localStorage for id last opened game.
+ */
+export const LAST_ID_KEY = '_masaoeditor_last_id';
+
+/**
  * Open the database.
  */
 export function openDatabase(): Promise<IDBDatabase> {

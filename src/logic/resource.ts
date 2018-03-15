@@ -12,10 +12,14 @@ import { SetMediaAction } from '../action/media';
 import { getAugment } from '../game/format';
 import randomString from '../util/random-string';
 
-import { DATABASE_NAME, OS_RESOURCE, openDatabase } from './db';
+import {
+  DATABASE_NAME,
+  OS_RESOURCE,
+  FINGERPRINT_KEY,
+  openDatabase,
+} from './db';
 
 // --- LocalStorage
-const FINGERPRINT_KEY = '_masaoeditor_fingerprint';
 
 const loadFingerprintLogic = createLogic<LoadFingerprintAction>({
   type: 'load-fingerprint',
