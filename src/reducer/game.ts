@@ -1,9 +1,18 @@
 // 編集中のゲームの情報だ
 import { format } from 'masao';
+import { MasaoJSONFormat } from '../game/format';
+import randomString from '../util/random-string';
 import { Action } from '../action';
 
 export interface GameData {
-  game: any;
+  /**
+   * Id of this game.
+   */
+  id: string;
+  /**
+   * Current game.
+   */
+  game: MasaoJSONFormat;
 }
 
 const defaultGame = format.make({
@@ -177,6 +186,7 @@ const defaultGame = format.make({
   },
 });
 const initialData: GameData = {
+  id: randomString(),
   game: defaultGame,
 };
 

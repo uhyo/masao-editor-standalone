@@ -9,6 +9,7 @@ import { ResourceData } from '../reducer/resource';
 import { MediaData } from '../reducer/media';
 import { GameData } from '../reducer/game';
 import { ErrorData } from '../reducer/error';
+import { MasaoJSONFormat } from '../game/format';
 
 import MasaoEditorCore, {
   EditState,
@@ -21,6 +22,7 @@ import DropComponent from './drop';
 import ErrorComponent from './error';
 import TestplayContainer from '../container/testplay';
 import ResourceContainer from '../container/resource';
+import FileContainer from '../container/file';
 import KeyScreenComponent from '../component/key';
 
 import { addResource } from '../game/param';
@@ -40,12 +42,17 @@ interface IPropEditorComponent {
   requestInit(): void;
   requestEditor(): void;
   requestResource(): void;
-  requestTestplay(game: masao.format.MasaoJSONFormat, startStage: number): void;
+  requestFile(): void;
+  requestTestplay(game: MasaoJSONFormat, startStage: number): void;
   requestKey(): void;
 
   addFiles(resources: Array<ResourceWithoutId>): void;
+  /**
+   * ブラウザ内セーブを要求
+   */
+  requestSaveInBrowser(id: string, game: MasaoJSONFormat): void;
 
-  requestLoadGame(game: any): void;
+  requestLoadGame(game: MasaoJSONFormat): void;
 
   requestError(message: string): void;
   requestCloseError(): void;
@@ -60,9 +67,9 @@ export default class EditorComponent extends React.Component<
   constructor(props: IPropEditorComponent) {
     super(props);
     this.handleTestplay = this.handleTestplay.bind(this);
-    this.handleSave = this.handleSave.bind(this);
+    this.handleJSONSave = this.handleJSONSave.bind(this);
     this.handleFileAccept = this.handleFileAccept.bind(this);
-    this.handleHTML = this.handleHTML.bind(this);
+    this.handleHTMLSave = this.handleHTMLSave.bind(this);
     this.handleNewGame = this.handleNewGame.bind(this);
 
     this.handleCommand = this.handleCommand.bind(this);
@@ -97,6 +104,7 @@ export default class EditorComponent extends React.Component<
     const {
       requestEditor,
       requestResource,
+      requestFile,
       requestCloseError,
       requestKey,
       mode,
@@ -117,6 +125,12 @@ export default class EditorComponent extends React.Component<
       subpain = (
         <div className={styles.screen}>
           <ResourceContainer />
+        </div>
+      );
+    } else if (mode === 'file') {
+      subpain = (
+        <div className={styles.screen}>
+          <FileContainer />
         </div>
       );
     } else if (mode === 'key') {
@@ -154,10 +168,11 @@ export default class EditorComponent extends React.Component<
             mode={mode}
             requestEditor={requestEditor}
             requestResource={requestResource}
+            requestFile={requestFile}
             requestTestplay={this.handleTestplay}
             requestKey={requestKey}
-            requestSave={this.handleSave}
-            requestHTML={this.handleHTML}
+            requestSave={this.handleJSONSave}
+            requestHTML={this.handleHTMLSave}
             requestNewGame={this.handleNewGame}
           />
         </div>
@@ -182,6 +197,23 @@ export default class EditorComponent extends React.Component<
       </div>
     );
   }
+  /**
+   * 保存用のゲームデータを作成
+   */
+  protected generateGame(): MasaoJSONFormat {
+    const { game: gameData, resource, media } = this.props;
+
+    const core = this.refs['core'] as MasaoEditorCore;
+    const game1 = core.getCurrentGame();
+    game1.params = addResource('save', game1.params, this.props.media);
+
+    const game = addEditorInfo(game1, {
+      id: gameData.id,
+      resource,
+      media,
+    });
+    return game;
+  }
   // ------ メニューからの入力
   // テストプレイボタン
   private handleTestplay() {
@@ -194,14 +226,8 @@ export default class EditorComponent extends React.Component<
     this.props.requestTestplay(game, stage);
   }
   // 保存ボタン
-  private handleSave() {
-    const { resource, media } = this.props;
-    const core = this.refs['core'] as MasaoEditorCore;
-    const game1 = core.getCurrentGame();
-
-    game1.params = addResource('save', game1.params, this.props.media);
-
-    const game = addEditorInfo(game1, resource, media);
+  private handleJSONSave() {
+    const game = this.generateGame();
 
     // ファイルにして保存してもらう
     const blob = new Blob([JSON.stringify(game)], {
@@ -211,14 +237,8 @@ export default class EditorComponent extends React.Component<
     download('game.json', blob);
   }
   // HTMLの出力を要求された
-  private handleHTML() {
-    const { resource, media } = this.props;
-
-    const core = this.refs['core'] as MasaoEditorCore;
-    const game1 = core.getCurrentGame();
-
-    game1.params = addResource('save', game1.params, this.props.media);
-    const game = addEditorInfo(game1, resource, media);
+  private handleHTMLSave() {
+    const game = this.generateGame();
     const html = gameToHTML(game);
 
     const blob = new Blob([html], {
@@ -226,6 +246,15 @@ export default class EditorComponent extends React.Component<
     });
 
     download('game.html', blob);
+  }
+  /**
+   * ブラウザ内に保存する
+   */
+  protected handleBrowserSave() {
+    const id = this.props.game.id;
+    const game = this.generateGame();
+
+    this.props.requestSaveInBrowser(id, game);
   }
   // ファイルがドロップされた
   private handleFileAccept(files: Array<File>) {
@@ -290,12 +319,14 @@ export default class EditorComponent extends React.Component<
       }
       case 'save': {
         // 保存コマンド
-        if (command.kind === 'default' || command.kind === 'json') {
+        if (command.kind === 'default') {
+          this.handleBrowserSave();
+        } else if (command.kind === 'json') {
           // JSONで保存
-          this.handleSave();
+          this.handleJSONSave();
         } else {
           // HTMLで保存
-          this.handleHTML();
+          this.handleHTMLSave();
         }
       }
     }

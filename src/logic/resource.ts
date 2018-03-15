@@ -12,38 +12,10 @@ import { SetMediaAction } from '../action/media';
 import { getAugment } from '../game/format';
 import randomString from '../util/random-string';
 
-// --- Indexed Database
-const DATABASE_NAME = 'masaoeditor';
-// objectStore
-const OS_RESOURCE = 'resource';
+import { DATABASE_NAME, OS_RESOURCE, openDatabase } from './db';
 
 // --- LocalStorage
 const FINGERPRINT_KEY = '_masaoeditor_fingerprint';
-
-function openDatabase(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DATABASE_NAME, 1);
-
-    req.onupgradeneeded = ev => {
-      const db = req.result;
-      const oldVersion = ev.oldVersion || 0;
-
-      // DBを初期化
-      if (oldVersion < 1) {
-        db.createObjectStore(OS_RESOURCE, {
-          keyPath: 'id',
-          autoIncrement: true,
-        });
-      }
-    };
-    req.onerror = er => {
-      reject(er);
-    };
-    req.onsuccess = () => {
-      resolve(req.result);
-    };
-  });
-}
 
 const loadFingerprintLogic = createLogic<LoadFingerprintAction>({
   type: 'load-fingerprint',
@@ -254,7 +226,7 @@ const loadGameLogic = createLogic<LoadGameAction>({
   type: 'load-game',
   process({ action, getState }, dispatch, done) {
     const { game } = action;
-    const { resource, media } = getState();
+    const { file, resource, media } = getState();
 
     const augment = getAugment(game);
 
@@ -277,6 +249,8 @@ const loadGameLogic = createLogic<LoadGameAction>({
                 if (param == null) {
                   dispatch({
                     type: 'got-game',
+                    // IDは存在しない場合のみ新規生成
+                    id: augment.id || randomString(),
                     game,
                   });
                   resolve();
@@ -321,6 +295,7 @@ const loadGameLogic = createLogic<LoadGameAction>({
       // リソースは一切なし
       dispatch({
         type: 'got-game',
+        id: randomString(),
         game,
       });
       done();

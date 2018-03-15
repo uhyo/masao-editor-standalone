@@ -1,13 +1,22 @@
+import { MasaoJSONFormat } from '../game/format';
+
 // logicの前
 export interface LoadGameAction {
   type: 'load-game';
-  game: any;
+  game: MasaoJSONFormat;
 }
 
 // logicの後
 export interface GotGameAction {
   type: 'got-game';
-  game: any;
+  /**
+   * 読みこまれたゲームのID
+   */
+  id: string;
+  /**
+   * ゲーム本体
+   */
+  game: MasaoJSONFormat;
 }
 
 export type GameActions = LoadGameAction | GotGameAction;

@@ -5,10 +5,29 @@ import { Mode } from '../reducer/mode';
 import * as styles from './css/menu.css';
 
 interface IPropMenu {
+  /**
+   * 現在の画面
+   */
   mode: Mode;
+  /**
+   * エディタ画面の表示をリクエスト
+   */
   requestEditor(): void;
+  /**
+   * テストプレイ画面の表示をリクエスト
+   */
   requestTestplay(): void;
+  /**
+   * リソース画面の表示をリクエスト
+   */
   requestResource(): void;
+  /**
+   * ファイル管理画面の表示をリクエスト
+   */
+  requestFile(): void;
+  /**
+   * キー設定画面の表示をリクエスト
+   */
   requestKey(): void;
 
   requestNewGame(): void;
@@ -23,6 +42,7 @@ export default class MenuComponent extends React.Component<IPropMenu, {}> {
       requestEditor,
       requestTestplay,
       requestResource,
+      requestFile,
       requestKey,
 
       requestNewGame,
@@ -40,6 +60,9 @@ export default class MenuComponent extends React.Component<IPropMenu, {}> {
         </div>
         <div onClick={requestResource} className={cls('resource')}>
           リソース
+        </div>
+        <div onClick={requestFile} className={cls('file')}>
+          ファイル
         </div>
         <div className={styles.separator} />
         <div onClick={requestNewGame} className={styles.button}>

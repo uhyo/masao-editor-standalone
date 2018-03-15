@@ -4,6 +4,7 @@ import { TestplayAction } from './testplay';
 import { ResourceActions } from './resource';
 import { MediaActions } from './media';
 import { GameActions } from './game';
+import { FileActions } from './file';
 
 export type Action =
   | ErrorActions
@@ -11,4 +12,5 @@ export type Action =
   | TestplayAction
   | ResourceActions
   | MediaActions
-  | GameActions;
+  | GameActions
+  | FileActions;

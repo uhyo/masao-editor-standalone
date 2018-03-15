@@ -1,6 +1,6 @@
 import { Action } from '../action';
 
-export type Mode = 'main' | 'testplay' | 'resource' | 'key';
+export type Mode = 'main' | 'testplay' | 'file' | 'resource' | 'key';
 
 export default function modeReducer(
   state: Mode = 'main',
@@ -12,6 +12,8 @@ export default function modeReducer(
     return 'testplay';
   } else if (action.type === 'resource-screen') {
     return 'resource';
+  } else if (action.type === 'file-screen') {
+    return 'file';
   } else if (action.type === 'key-screen') {
     return 'key';
   }

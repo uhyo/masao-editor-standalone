@@ -14,6 +14,9 @@ const defaults: Record<string, string> = {
   filename_title: 'title.gif',
 };
 
+/**
+ * paramにリソースに関するparamを足す
+ */
 export function addResource(
   mode: 'testplay' | 'save',
   params: Record<string, string>,

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from '../store';
 
 import { ResourceWithoutId } from '../action/resource';
+import { MasaoJSONFormat } from '../game/format';
 
 import EditorComponent from '../component/editor';
 import * as masao from 'masao';
@@ -31,6 +32,11 @@ export default connect(
         type: 'resource-screen',
       });
     },
+    requestFile() {
+      dispatch({
+        type: 'file-screen',
+      });
+    },
     requestTestplay(game: any, startStage: number) {
       dispatch({
         type: 'testplay',
@@ -50,6 +56,13 @@ export default connect(
       });
       dispatch({
         type: 'resource-screen',
+      });
+    },
+    requestSaveInBrowser(id: string, game: MasaoJSONFormat) {
+      dispatch({
+        type: 'file-save-in-browser',
+        id,
+        game,
       });
     },
     requestLoadGame(game: any) {

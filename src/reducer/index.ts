@@ -6,6 +6,7 @@ import testplayReducer, { TestplayData } from './testplay';
 import resourceReducer, { ResourceData } from './resource';
 import mediaReducer from './media';
 import gameReducer from './game';
+import fileReducer from './file';
 
 export default combineReducers({
   error: errorReducer,
@@ -14,4 +15,5 @@ export default combineReducers({
   resource: resourceReducer,
   media: mediaReducer,
   game: gameReducer,
+  file: fileReducer,
 });
