@@ -64,6 +64,10 @@ export default class EditorComponent extends React.Component<
   IPropEditorComponent,
   IStateEditorComponent
 > {
+  /**
+   * Ref to MasaoEditorCore
+   */
+  protected core: MasaoEditorCore | null = null;
   constructor(props: IPropEditorComponent) {
     super(props);
     this.handleTestplay = this.handleTestplay.bind(this);
@@ -85,8 +89,12 @@ export default class EditorComponent extends React.Component<
     if (process.env.NODE_ENV === 'production') {
       window.addEventListener('beforeunload', this.handleBeforeUnload, false);
     }
+    const { core } = this;
+    if (core == null) {
+      return;
+    }
 
-    const keyBinding = (this.refs['core'] as MasaoEditorCore).getKeyConfig();
+    const keyBinding = core.getKeyConfig();
     this.setState({
       keyBinding,
     });
@@ -179,7 +187,7 @@ export default class EditorComponent extends React.Component<
         <div className={styles.content}>
           <div className={styles.editor}>
             <MasaoEditorCore
-              ref="core"
+              ref={e => (this.core = e)}
               backupId="standalone_editor"
               filename_mapchip={filename_mapchip}
               filename_pattern={filename_pattern}
@@ -202,8 +210,10 @@ export default class EditorComponent extends React.Component<
    */
   protected generateGame(): MasaoJSONFormat {
     const { game: gameData, resource, media } = this.props;
-
-    const core = this.refs['core'] as MasaoEditorCore;
+    const { core } = this;
+    if (core == null) {
+      throw new Error('Cannot generate game');
+    }
     const game1 = core.getCurrentGame();
     game1.params = addResource('save', game1.params, this.props.media);
 
@@ -217,7 +227,10 @@ export default class EditorComponent extends React.Component<
   // ------ メニューからの入力
   // テストプレイボタン
   private handleTestplay() {
-    const core = this.refs['core'] as MasaoEditorCore;
+    const { core } = this;
+    if (core == null) {
+      return;
+    }
     const game = core.getCurrentGame();
     const stage = core.getCurrentStage();
 
