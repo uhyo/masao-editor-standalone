@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { GameData } from '../../reducer/game';
 import { FileData } from '../../reducer/file';
 import { MasaoJSONFormat } from '../../game/format';
 
@@ -12,6 +13,10 @@ interface IPropFile {
    * ファイル関連のデータ
    */
   file: FileData;
+  /**
+   * 現在のゲームの情報
+   */
+  game: GameData;
   /**
    * データの読み込みをリクエスト
    */
@@ -32,10 +37,11 @@ interface IPropFile {
 /**
  * ファイル管理パネル
  */
-export default class FileComponent extends React.Component<IPropFile, {}> {
+export default class FileComponent extends React.PureComponent<IPropFile, {}> {
   public render() {
     const {
       file: { status, files },
+      game,
       requestFileOpen,
       requestFilePreview,
       requestFileDelete,
@@ -46,6 +52,7 @@ export default class FileComponent extends React.Component<IPropFile, {}> {
           <p>Loading...</p>
         ) : (
           <FileList
+            current={game.id}
             files={files}
             onOpenFile={requestFileOpen}
             onPreviewFile={requestFilePreview}

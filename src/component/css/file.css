@@ -20,6 +20,14 @@
 
   .filename {
     font-weight: bold;
+
+    b {
+      display: inline-block;
+      margin: 0 6px;
+
+      color: red;
+      font-weight: normal;
+    }
   }
   .controls {
     display: flex;

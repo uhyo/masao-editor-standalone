@@ -16,6 +16,10 @@ export interface IPropFileList {
    */
   files: BrowserFile[];
   /**
+   * 現在開かれているゲームのID
+   */
+  current: string;
+  /**
    * ファイルをまだ開かないけどプレビューする
    */
   onPreviewFile(game: MasaoJSONFormat): void;
@@ -33,7 +37,13 @@ export interface IPropFileList {
  */
 export class FileList extends React.Component<IPropFileList, {}> {
   public render() {
-    const { files, onOpenFile, onPreviewFile, onDeleteFile } = this.props;
+    const {
+      files,
+      current,
+      onOpenFile,
+      onPreviewFile,
+      onDeleteFile,
+    } = this.props;
 
     return (
       <div>
@@ -46,7 +56,10 @@ export class FileList extends React.Component<IPropFileList, {}> {
               className={styles.filebox}
               onDoubleClick={() => onOpenFile(file)}
             >
-              <div className={styles.filename}>{name}</div>
+              <div className={styles.filename}>
+                {name}
+                {current === file.id ? <b>編集中</b> : null}
+              </div>
               <div>
                 最終更新日時：{file.lastModified.toLocaleString('ja-JP')}
               </div>

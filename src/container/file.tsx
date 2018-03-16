@@ -7,7 +7,7 @@ import { MasaoJSONFormat } from '../game/format';
 import FileComponent from '../component/file/index';
 
 export default connect(
-  ({ file }) => ({ file }),
+  ({ file, game }) => ({ file, game }),
   dispatch => ({
     requestLoad() {
       dispatch({
