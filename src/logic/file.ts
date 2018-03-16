@@ -4,7 +4,9 @@ import {
   LoadFilesAction,
   SaveInBrowserAction,
   LoadLastAction,
+  DeleteFileAction,
 } from '../action/file';
+import { getGameTitle } from '../game/metadata';
 
 import randomString from '../util/random-string';
 
@@ -172,5 +174,49 @@ const loadLastLogic = createLogic<LoadLastAction>({
   },
 });
 
+/**
+ * ファイルを削除するロジック
+ */
+const deleteFileLogic = createLogic<DeleteFileAction>({
+  type: 'file-delete',
+  validate({ action }, allow, reject) {
+    const { file } = action;
+    const title = getGameTitle(file.data);
+    // 削除していいか聞く
+    const res = confirm(`本当に「${title}」を削除しますか？`);
+
+    if (res) {
+      allow(action);
+    } else {
+      reject(action);
+    }
+  },
+  process({ action, getState }, dispatch, next) {
+    openDatabase()
+      .then(
+        db =>
+          new Promise((resolve, reject) => {
+            const tx = db.transaction(OS_FILE, 'readwrite');
+            const store = tx.objectStore(OS_FILE);
+
+            const res = store.delete(action.file.id);
+            res.onsuccess = () => {
+              resolve();
+              const { file: { status } } = getState();
+              if (status === 'loaded') {
+                // 再ロード
+                dispatch({
+                  type: 'request-load-files',
+                });
+              }
+            };
+            res.onerror = reject;
+          }),
+      )
+      .catch(er => dispatch({ type: 'error', message: String(er) }))
+      .then(next);
+  },
+});
+
 // export all logics.
-export default [loadFileLogic, saveInBrowserLogic];
+export default [loadFileLogic, saveInBrowserLogic, deleteFileLogic];

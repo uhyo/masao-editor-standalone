@@ -48,6 +48,14 @@ export interface LoadLastAction {
   type: 'file-load-last';
 }
 
+/**
+ * ファイルを削除するアクション
+ */
+export interface DeleteFileAction {
+  type: 'file-delete';
+  file: BrowserFile;
+}
+
 // ----- logicの後 -----
 
 /**
@@ -68,5 +76,6 @@ export type FileActions =
   | LoadFilesAction
   | SaveInBrowserAction
   | LoadLastAction
+  | DeleteFileAction
   | LoadStartedAction
   | GotFilesAction;

@@ -1,4 +1,5 @@
 .wrapper {
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   padding: 1em;
@@ -16,8 +17,21 @@
   > div {
     margin: 0.3em 0;
   }
-}
 
-.filename {
-  font-weight: bold;
+  .filename {
+    font-weight: bold;
+  }
+  .controls {
+    display: flex;
+    flex-flow: row nowrap;
+
+    > div {
+      flex: auto 0 0;
+    }
+
+    > div:first-child {
+      flex: auto 1 0;
+      padding-right: 10px;
+    }
+  }
 }
