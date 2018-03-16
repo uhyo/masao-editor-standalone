@@ -41,6 +41,13 @@ export interface SaveInBrowserAction {
   game: MasaoJSONFormat;
 }
 
+/**
+ * 前回開いていたファイルを読み込むアクション
+ */
+export interface LoadLastAction {
+  type: 'file-load-last';
+}
+
 // ----- logicの後 -----
 
 /**
@@ -60,5 +67,6 @@ export interface GotFilesAction {
 export type FileActions =
   | LoadFilesAction
   | SaveInBrowserAction
+  | LoadLastAction
   | LoadStartedAction
   | GotFilesAction;

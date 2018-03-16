@@ -6,6 +6,10 @@ import { Action } from '../action';
 
 export interface GameData {
   /**
+   * Whether game is loaded.
+   */
+  loaded: boolean;
+  /**
    * Id of this game.
    */
   id: string;
@@ -186,6 +190,7 @@ const defaultGame = format.make({
   },
 });
 const initialData: GameData = {
+  loaded: false,
   id: randomString(),
   game: defaultGame,
 };
@@ -195,8 +200,11 @@ export default function gameReducer(
   action: Action,
 ): GameData {
   if (action.type === 'got-game') {
+    console.assert(action.id != null, 'action.id should not be undefined');
     return {
       ...state,
+      loaded: true,
+      id: action.id,
       game: action.game,
     };
   }

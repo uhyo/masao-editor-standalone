@@ -68,6 +68,7 @@ export default connect(
     requestLoadGame(game: MasaoJSONFormat) {
       dispatch({
         type: 'load-game',
+        id: undefined,
         game,
       });
       dispatch({

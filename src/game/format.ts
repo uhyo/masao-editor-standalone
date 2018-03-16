@@ -94,8 +94,8 @@ export function addEditorInfo(
   };
 }
 
-export function getAugment(game: any): Augment {
-  const a = game[NAMESPACE] || {};
+export function getAugment(game: MasaoJSONFormat): Augment {
+  const a: any = game[NAMESPACE] || {};
 
   if (a.fingerprint == null) {
     a.fingerprint = null;

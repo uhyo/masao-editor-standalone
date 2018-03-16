@@ -3,6 +3,7 @@ import {
   BrowserFile,
   LoadFilesAction,
   SaveInBrowserAction,
+  LoadLastAction,
 } from '../action/file';
 
 import randomString from '../util/random-string';
@@ -96,6 +97,69 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
               }
             };
             res.onerror = reject;
+          }),
+      )
+      .catch(er => {
+        dispatch({
+          type: 'error',
+          message: String(er),
+        });
+      })
+      .then(done);
+  },
+});
+
+/**
+ * 前回開いていたファイルを読み込むロジック
+ */
+const loadLastLogic = createLogic<LoadLastAction>({
+  type: 'file-load-last',
+  process({ getState }, dispatch, done) {
+    // localStorageから読む
+    const lastid = localStorage.getItem(LAST_ID_KEY);
+
+    if (!lastid) {
+      // ないよ
+      const { id, game } = getState().game;
+      dispatch({
+        type: 'got-game',
+        id,
+        game,
+      });
+      return;
+    }
+
+    openDatabase()
+      .then(
+        db =>
+          new Promise((resolve, reject) => {
+            const tx = db.transaction(OS_FILE, 'readonly');
+            const store = tx.objectStore(OS_FILE);
+
+            const req = store.get(lastid);
+            req.onsuccess = () => {
+              const doc: BrowserFile | undefined = req.result;
+
+              if (doc == null) {
+                // そんなものはない
+                const { id, game } = getState().game;
+                dispatch({
+                  type: 'got-game',
+                  id,
+                  game,
+                });
+                return;
+              }
+              // ゲームを読み込んだ
+              const { id, data: game } = doc;
+              dispatch({
+                type: 'got-game',
+                id,
+                game,
+              });
+              resolve();
+            };
+            req.onerror = reject;
           }),
       )
       .catch(er => {

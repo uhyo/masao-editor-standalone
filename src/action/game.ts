@@ -1,8 +1,17 @@
 import { MasaoJSONFormat } from '../game/format';
 
-// logicの前
+/**
+ * このゲームを開いて読み込む
+ */
 export interface LoadGameAction {
   type: 'load-game';
+  /**
+   * ゲームのID
+   */
+  id: string | undefined;
+  /**
+   * 読みこまれたゲーム
+   */
   game: MasaoJSONFormat;
 }
 

@@ -1,8 +1,9 @@
 import * as masao from 'masao';
+import { MasaoJSONFormat } from './format';
 
 // Fileからゲームを取得するかも
-export function loadFileAsGame(file: File): Promise<any | null> {
-  return new Promise<any | null>(resolve => {
+export function loadFileAsGame(file: File): Promise<MasaoJSONFormat | null> {
+  return new Promise(resolve => {
     if (file.type === 'application/json' || /\.json$/i.test(file.name)) {
       // JSONっぽい
       resolve(
