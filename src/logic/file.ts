@@ -120,6 +120,8 @@ const loadLastLogic = createLogic<LoadLastAction>({
     // localStorageから読む
     const lastid = localStorage.getItem(LAST_ID_KEY);
 
+    console.log('lastid', lastid);
+
     if (!lastid) {
       // ないよ
       const { id, game } = getState().game;
@@ -219,4 +221,9 @@ const deleteFileLogic = createLogic<DeleteFileAction>({
 });
 
 // export all logics.
-export default [loadFileLogic, saveInBrowserLogic, deleteFileLogic];
+export default [
+  loadFileLogic,
+  saveInBrowserLogic,
+  loadLastLogic,
+  deleteFileLogic,
+];
