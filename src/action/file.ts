@@ -56,6 +56,14 @@ export interface DeleteFileAction {
   file: BrowserFile;
 }
 
+/**
+ * 編集中のファイルを変更するアクション
+ */
+export interface SetEditingAction {
+  type: 'file-set-editing';
+  id: string | undefined;
+}
+
 // ----- logicの後 -----
 
 /**
@@ -77,5 +85,6 @@ export type FileActions =
   | SaveInBrowserAction
   | LoadLastAction
   | DeleteFileAction
+  | SetEditingAction
   | LoadStartedAction
   | GotFilesAction;

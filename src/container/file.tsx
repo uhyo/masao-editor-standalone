@@ -41,5 +41,11 @@ export default connect(
         file,
       });
     },
+    requestSetEditingFile(id: string | undefined) {
+      dispatch({
+        type: 'file-set-editing',
+        id,
+      });
+    },
   }),
 )(FileComponent);

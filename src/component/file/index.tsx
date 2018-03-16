@@ -33,6 +33,10 @@ interface IPropFile {
    * ファイルの削除をリクエスト
    */
   requestFileDelete(file: BrowserFile): void;
+  /**
+   * メタデータ編集中のファイルの設定をリクエスト
+   */
+  requestSetEditingFile(id: string | undefined): void;
 }
 /**
  * ファイル管理パネル
@@ -40,11 +44,12 @@ interface IPropFile {
 export default class FileComponent extends React.PureComponent<IPropFile, {}> {
   public render() {
     const {
-      file: { status, files },
+      file: { status, files, editingfile },
       game,
       requestFileOpen,
       requestFilePreview,
       requestFileDelete,
+      requestSetEditingFile,
     } = this.props;
     return (
       <div className={styles.wrapper}>
@@ -54,9 +59,11 @@ export default class FileComponent extends React.PureComponent<IPropFile, {}> {
           <FileList
             current={game.id}
             files={files}
+            editingfile={editingfile}
             onOpenFile={requestFileOpen}
             onPreviewFile={requestFilePreview}
             onDeleteFile={requestFileDelete}
+            onSetEditingFile={requestSetEditingFile}
           />
         )}
       </div>

@@ -8,6 +8,7 @@
 }
 
 .filebox {
+  border-box: box-sizing;
   margin: 1em;
   padding: 0.4em;
   max-width: 25em;
@@ -35,11 +36,15 @@
 
     > div {
       flex: auto 0 0;
+      margin: 0 8px;
     }
 
     > div:first-child {
       flex: auto 1 0;
-      padding-right: 10px;
     }
   }
+}
+
+.editing {
+  max-width: 100%;
 }

@@ -14,11 +14,16 @@ export interface FileData {
    * 読みこまれたファイル達
    */
   files: Array<BrowserFile>;
+  /**
+   * 現在情報編集中のファイルID
+   */
+  editingfile: string | undefined;
 }
 
 const initialData: FileData = {
   status: 'none',
   files: [],
+  editingfile: undefined,
 };
 
 /**
@@ -32,8 +37,14 @@ export default function(state = initialData, action: Action): FileData {
     };
   } else if (action.type === 'got-files') {
     return {
+      ...state,
       status: 'loaded',
       files: action.files,
+    };
+  } else if (action.type === 'file-set-editing') {
+    return {
+      ...state,
+      editingfile: action.id,
     };
   }
   return state;
