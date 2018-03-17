@@ -11,7 +11,7 @@
   border-box: box-sizing;
   margin: 1em;
   padding: 0.4em;
-  max-width: 25em;
+  max-width: 32em;
 
   background-color: #ffd7d7;
 
@@ -46,5 +46,14 @@
 }
 
 .editing {
-  max-width: 100%;
+}
+
+.edit-wrapper {
+  display: grid;
+  grid-template: auto auto / max-content 1fr;
+  grid-gap: 6px;
+
+  input {
+    width: stretch;
+  }
 }

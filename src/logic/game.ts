@@ -3,6 +3,7 @@ import { GotGameAction } from '../action/game';
 import randomString from '../util/random-string';
 import { getAugment } from '../game/format';
 
+import { LAST_ID_KEY } from './db';
 /**
  * ゲームからIDを抽出するロジック
  */
@@ -25,6 +26,13 @@ const getGameId = createLogic<GotGameAction>({
       id,
       game,
     });
+  },
+  process({ action: { id } }, _, next) {
+    // 現在開いていいるファイルを更新
+    if (id != null) {
+      localStorage.setItem(LAST_ID_KEY, id);
+    }
+    next();
   },
 });
 

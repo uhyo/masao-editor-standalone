@@ -37,6 +37,10 @@ interface IPropFile {
    * メタデータ編集中のファイルの設定をリクエスト
    */
   requestSetEditingFile(id: string | undefined): void;
+  /**
+   * ファイルのブラウザへの保存をリクエスト
+   */
+  requestSaveOnBrowser(file: BrowserFile): void;
 }
 /**
  * ファイル管理パネル
@@ -50,6 +54,7 @@ export default class FileComponent extends React.PureComponent<IPropFile, {}> {
       requestFilePreview,
       requestFileDelete,
       requestSetEditingFile,
+      requestSaveOnBrowser,
     } = this.props;
     return (
       <div className={styles.wrapper}>
@@ -64,6 +69,10 @@ export default class FileComponent extends React.PureComponent<IPropFile, {}> {
             onPreviewFile={requestFilePreview}
             onDeleteFile={requestFileDelete}
             onSetEditingFile={requestSetEditingFile}
+            onSaveOnBrowser={file => {
+              requestSaveOnBrowser(file);
+              requestSetEditingFile(undefined);
+            }}
           />
         )}
       </div>

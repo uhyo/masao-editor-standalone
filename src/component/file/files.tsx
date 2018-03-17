@@ -7,6 +7,7 @@ import { MasaoJSONFormat } from '../../game/format';
 import { getGameTitle } from '../../game/metadata';
 
 import * as styles from '../css/file.css';
+import { MetadataEdit } from './metadata';
 
 const { Button } = uis;
 
@@ -39,6 +40,10 @@ export interface IPropFileList {
    * メタデータを編集中のファイルを変更するイベント
    */
   onSetEditingFile(id: string | undefined): void;
+  /**
+   * ファイルをブラウザに保存しなおすイベント
+   */
+  onSaveOnBrowser(file: BrowserFile): void;
 }
 export interface IStateFileList {}
 /**
@@ -57,6 +62,7 @@ export class FileList extends React.Component<IPropFileList, IStateFileList> {
       onPreviewFile,
       onDeleteFile,
       onSetEditingFile,
+      onSaveOnBrowser,
     } = this.props;
 
     return (
@@ -72,7 +78,7 @@ export class FileList extends React.Component<IPropFileList, IStateFileList> {
                 key={file.id}
                 className={`${styles.filebox} ${styles.editing}`}
               >
-                hi
+                <MetadataEdit file={file} onSave={onSaveOnBrowser} />
               </div>
             );
           } else {

@@ -47,5 +47,14 @@ export default connect(
         id,
       });
     },
+    requestSaveOnBrowser(file: BrowserFile) {
+      console.log(
+        dispatch({
+          type: 'file-save-in-browser',
+          id: file.id,
+          game: file.data,
+        }),
+      );
+    },
   }),
 )(FileComponent);
