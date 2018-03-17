@@ -1,4 +1,5 @@
 import { MasaoJSONFormat } from '../game/format';
+import { GameMetadata } from '../game/metadata';
 
 /**
  * このゲームを開いて読み込む
@@ -22,6 +23,10 @@ export interface GotGameAction {
    * 読みこまれたゲームのID
    */
   id: string;
+  /**
+   * メタデータ
+   */
+  metadata: GameMetadata;
   /**
    * ゲーム本体
    */

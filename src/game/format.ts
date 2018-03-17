@@ -1,6 +1,7 @@
 import { format } from 'masao';
 import { ResourceData } from '../reducer/resource';
 import { MediaData } from '../reducer/media';
+import { GameMetadata } from './metadata';
 
 // metadata.editorに入れるやつ
 const EDITOR_CODE = 'uhyo-masao-editor';
@@ -48,6 +49,10 @@ export interface AdditionData {
    */
   id: string;
   /**
+   * メタデータ
+   */
+  metadata: GameMetadata;
+  /**
    * リソースの情報
    */
   resource: ResourceData;
@@ -61,11 +66,15 @@ export interface AdditionData {
  */
 export function addEditorInfo(
   game: MasaoJSONFormat,
-  { id, resource, media }: AdditionData,
+  { id, metadata, resource, media }: AdditionData,
 ): MasaoJSONFormat {
-  let metadata2 = game.metadata || {};
-  if (metadata2.editor == null) {
-    metadata2.editor = EDITOR_CODE;
+  if (metadata == null) {
+    metadata = {};
+  } else {
+    metadata = { ...metadata };
+  }
+  if (!metadata.editor) {
+    metadata.editor = EDITOR_CODE;
   }
 
   // 拡張
@@ -89,7 +98,7 @@ export function addEditorInfo(
 
   return {
     ...game,
-    metadata: metadata2,
+    metadata,
     [NAMESPACE]: augment,
   };
 }

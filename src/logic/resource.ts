@@ -10,6 +10,7 @@ import { LoadGameAction } from '../action/game';
 import { SetMediaAction } from '../action/media';
 
 import { getAugment } from '../game/format';
+import { extractMetadata } from '../game/metadata';
 import randomString from '../util/random-string';
 
 import {
@@ -233,6 +234,7 @@ const loadGameLogic = createLogic<LoadGameAction>({
     const { file, resource, media } = getState();
 
     const augment = getAugment(game);
+    const metadata = extractMetadata(game);
 
     dispatch({
       type: 'reset-media',
@@ -255,6 +257,7 @@ const loadGameLogic = createLogic<LoadGameAction>({
                     type: 'got-game',
                     // IDは存在しない場合のみ新規生成
                     id: augment.id || randomString(),
+                    metadata,
                     game,
                   });
                   resolve();
@@ -300,6 +303,7 @@ const loadGameLogic = createLogic<LoadGameAction>({
       dispatch({
         type: 'got-game',
         id: randomString(),
+        metadata,
         game,
       });
       done();

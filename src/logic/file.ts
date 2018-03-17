@@ -6,7 +6,7 @@ import {
   LoadLastAction,
   DeleteFileAction,
 } from '../action/file';
-import { getGameTitle } from '../game/metadata';
+import { getGameTitle, extractMetadata } from '../game/metadata';
 
 import randomString from '../util/random-string';
 
@@ -90,11 +90,19 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
               // これが最新なのでlocalStorageにIDを保存
               localStorage.setItem(LAST_ID_KEY, id);
               resolve();
-              const { file: { status } } = getState();
+              const { game: { id: currentId }, file: { status } } = getState();
               if (status === 'loading') {
                 // 再ロードする
                 dispatch({
                   type: 'request-load-files',
+                });
+              }
+              if (currentId === id) {
+                // 現在開いているファイルが更新された
+                dispatch({
+                  type: 'load-game',
+                  id,
+                  game,
                 });
               }
             };
@@ -124,12 +132,6 @@ const loadLastLogic = createLogic<LoadLastAction>({
 
     if (!lastid) {
       // ないよ
-      const { id, game } = getState().game;
-      dispatch({
-        type: 'got-game',
-        id,
-        game,
-      });
       return;
     }
 
@@ -146,10 +148,11 @@ const loadLastLogic = createLogic<LoadLastAction>({
 
               if (doc == null) {
                 // そんなものはない
-                const { id, game } = getState().game;
+                const { id, metadata, game } = getState().game;
                 dispatch({
                   type: 'got-game',
                   id,
+                  metadata,
                   game,
                 });
                 return;
@@ -159,6 +162,7 @@ const loadLastLogic = createLogic<LoadLastAction>({
               dispatch({
                 type: 'got-game',
                 id,
+                metadata: extractMetadata(game),
                 game,
               });
               resolve();

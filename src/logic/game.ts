@@ -24,6 +24,7 @@ const getGameId = createLogic<GotGameAction>({
     next({
       type: 'got-game',
       id,
+      metadata: game.metadata,
       game,
     });
   },

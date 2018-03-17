@@ -219,6 +219,7 @@ export default class EditorComponent extends React.Component<
 
     const game = addEditorInfo(game1, {
       id: gameData.id,
+      metadata: gameData.metadata,
       resource,
       media,
     });

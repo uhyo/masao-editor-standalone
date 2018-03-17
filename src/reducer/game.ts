@@ -4,6 +4,8 @@ import { MasaoJSONFormat } from '../game/format';
 import randomString from '../util/random-string';
 import { Action } from '../action';
 
+import { GameMetadata } from '../game/metadata';
+
 export interface GameData {
   /**
    * Whether game is loaded.
@@ -13,6 +15,10 @@ export interface GameData {
    * Id of this game.
    */
   id: string;
+  /**
+   * Metadata of game.
+   */
+  metadata: GameMetadata;
   /**
    * Current game.
    */
@@ -192,6 +198,7 @@ const defaultGame = format.make({
 const initialData: GameData = {
   loaded: false,
   id: randomString(),
+  metadata: {},
   game: defaultGame,
 };
 
@@ -205,6 +212,7 @@ export default function gameReducer(
       ...state,
       loaded: true,
       id: action.id,
+      metadata: action.metadata,
       game: action.game,
     };
   }
