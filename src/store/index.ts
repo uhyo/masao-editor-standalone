@@ -22,10 +22,10 @@ interface Connect<S> {
   ): ConnectFunc<PState & PDispatch, POwn>;
 }
 
-interface ConnectFunc<PAdd, POwn> {
-  (
-    component: React.ComponentClass<PAdd> | React.StatelessComponent<PAdd>,
-  ): React.ComponentClass<POwn>;
+interface ConnectFunc<PAdd, POwnMin> {
+  <PAll extends PAdd & POwnMin>(
+    component: React.ComponentType<PAll>,
+  ): React.ComponentClass<Pick<PAll, Exclude<keyof PAll, keyof PAdd>>>;
 }
 
 function makeConnect<S>(_reducer: Reducer<S>): Connect<S> {

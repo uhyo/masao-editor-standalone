@@ -5,10 +5,11 @@ import { ResourceWithoutId, SetResourceSizeAction } from '../action/resource';
 import ResourceComponent from '../component/resource/index';
 
 export default connect(
-  ({ resource: { status, size, resources }, media }) => ({
+  ({ resource: { status, size, resources, fingerprint }, media }) => ({
     status,
     size,
     resources,
+    fingerprint,
     media,
   }),
   dispatch => ({
