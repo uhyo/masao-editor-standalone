@@ -158,6 +158,14 @@ const loadLastLogic = createLogic<LoadLastAction>({
 
     if (!lastid) {
       // ないよ
+      // 初期状態のを表示するためにgot-gameを走らせる
+      const { game: { id, metadata, game } } = getState();
+      dispatch({
+        type: 'got-game',
+        id,
+        metadata,
+        game,
+      });
       return;
     }
 

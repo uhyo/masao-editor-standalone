@@ -195,6 +195,12 @@ export default class EditorComponent extends React.Component<
     };
     const filename_pattern = urlFor(media, 'filename_pattern', 'pattern.gif');
     const filename_mapchip = urlFor(media, 'filename_mapchip', 'mapchip.gif');
+    // エディタはゲームを初期ロードするまで表示しない
+    const editorStyle = game.loaded
+      ? {}
+      : {
+          visibility: 'hidden',
+        };
     return (
       <div className={styles.wrapper}>
         <div className={styles.menu}>
@@ -215,7 +221,7 @@ export default class EditorComponent extends React.Component<
             saving={game.saving}
             title={getGameTitleFromMetadata(game.metadata)}
           />
-          <div className={styles.editor}>
+          <div className={styles.editor} style={editorStyle}>
             <MasaoEditorCore
               ref={e => (this.core = e)}
               filename_mapchip={filename_mapchip}
