@@ -85,8 +85,9 @@ export default class EditorComponent extends React.Component<
   constructor(props: IPropEditorComponent) {
     super(props);
     this.handleTestplay = this.handleTestplay.bind(this);
-    this.handleJSONSave = this.handleJSONSave.bind(this);
     this.handleFileAccept = this.handleFileAccept.bind(this);
+    this.handleBrowserSave = this.handleBrowserSave.bind(this);
+    this.handleJSONSave = this.handleJSONSave.bind(this);
     this.handleHTMLSave = this.handleHTMLSave.bind(this);
     this.handleNewGame = this.handleNewGame.bind(this);
 
@@ -211,8 +212,9 @@ export default class EditorComponent extends React.Component<
             requestFile={requestFile}
             requestTestplay={this.handleTestplay}
             requestKey={requestKey}
-            requestSave={this.handleJSONSave}
-            requestHTML={this.handleHTMLSave}
+            requestSave={this.handleBrowserSave}
+            requestJSONSave={this.handleJSONSave}
+            requestHTMLSave={this.handleHTMLSave}
             requestNewGame={this.handleNewGame}
           />
         </div>

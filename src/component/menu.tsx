@@ -32,10 +32,11 @@ interface IPropMenu {
 
   requestNewGame(): void;
   requestSave(): void;
-  requestHTML(): void;
+  requestJSONSave(): void;
+  requestHTMLSave(): void;
 }
 
-export default class MenuComponent extends React.Component<IPropMenu, {}> {
+export default class MenuComponent extends React.PureComponent<IPropMenu, {}> {
   render() {
     const {
       mode,
@@ -47,7 +48,8 @@ export default class MenuComponent extends React.Component<IPropMenu, {}> {
 
       requestNewGame,
       requestSave,
-      requestHTML,
+      requestJSONSave,
+      requestHTMLSave,
     } = this.props;
     const cls = (m: Mode) => (m === mode ? styles.active : styles.button);
     return (
@@ -69,9 +71,12 @@ export default class MenuComponent extends React.Component<IPropMenu, {}> {
           新規
         </div>
         <div onClick={requestSave} className={styles.button}>
-          JSON保存
+          上書き保存
         </div>
-        <div onClick={requestHTML} className={styles.button}>
+        <div onClick={requestJSONSave} className={styles.button}>
+          JSON出力
+        </div>
+        <div onClick={requestHTMLSave} className={styles.button}>
           HTML出力
         </div>
         <div className={styles.separator} />
