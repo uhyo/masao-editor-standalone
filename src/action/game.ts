@@ -2,6 +2,11 @@ import { MasaoJSONFormat } from '../game/format';
 import { GameMetadata } from '../game/metadata';
 
 /**
+ * Saving status of current game.
+ */
+export type SavedType = 'no' | 'saved' | 'updated';
+
+/**
  * このゲームを開いて読み込む
  */
 export interface LoadGameAction {
@@ -14,6 +19,10 @@ export interface LoadGameAction {
    * 読みこまれたゲーム
    */
   game: MasaoJSONFormat;
+  /**
+   * このゲームが新規かどうかのフラグ
+   */
+  new: boolean;
 }
 
 // logicの後
@@ -33,4 +42,12 @@ export interface GotGameAction {
   game: MasaoJSONFormat;
 }
 
-export type GameActions = LoadGameAction | GotGameAction;
+/**
+ * ゲームの保存状態を更新
+ */
+export interface UpdateSavingAction {
+  type: 'game-update-saving';
+  saving: SavedType;
+}
+
+export type GameActions = LoadGameAction | GotGameAction | UpdateSavingAction;

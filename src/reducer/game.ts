@@ -3,6 +3,7 @@ import { format } from 'masao';
 import { MasaoJSONFormat } from '../game/format';
 import randomString from '../util/random-string';
 import { Action } from '../action';
+import { SavedType } from '../action/game';
 
 import { GameMetadata } from '../game/metadata';
 
@@ -19,6 +20,10 @@ export interface GameData {
    * Metadata of game.
    */
   metadata: GameMetadata;
+  /**
+   * Saving status of current game.
+   */
+  saving: SavedType;
   /**
    * Current game.
    */
@@ -199,6 +204,7 @@ const initialData: GameData = {
   loaded: false,
   id: randomString(),
   metadata: {},
+  saving: 'no',
   game: defaultGame,
 };
 
@@ -214,6 +220,11 @@ export default function gameReducer(
       id: action.id,
       metadata: action.metadata,
       game: action.game,
+    };
+  } else if (action.type === 'game-update-saving') {
+    return {
+      ...state,
+      saving: action.saving,
     };
   }
   return state;

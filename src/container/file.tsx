@@ -20,6 +20,7 @@ export default connect(
         type: 'load-game',
         id: undefined,
         game,
+        new: false,
       });
     },
     requestFileOpen(file: BrowserFile) {
@@ -28,6 +29,7 @@ export default connect(
         type: 'load-game',
         id: undefined,
         game: file.data,
+        new: false,
       });
       // メイン画面に戻る
       dispatch({

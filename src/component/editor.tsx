@@ -10,6 +10,7 @@ import { MediaData } from '../reducer/media';
 import { GameData } from '../reducer/game';
 import { ErrorData } from '../reducer/error';
 import { MasaoJSONFormat } from '../game/format';
+import { getGameTitleFromMetadata } from '../game/metadata';
 
 import MasaoEditorCore, {
   EditState,
@@ -20,6 +21,7 @@ import MasaoEditorCore, {
 import MenuComponent from './menu';
 import DropComponent from './drop';
 import ErrorComponent from './error';
+import { StatusBar } from './status';
 import TestplayContainer from '../container/testplay';
 import ResourceContainer from '../container/resource';
 import FileContainer from '../container/file';
@@ -51,8 +53,12 @@ interface IPropEditorComponent {
    * ブラウザ内セーブを要求
    */
   requestSaveInBrowser(id: string, game: MasaoJSONFormat): void;
+  /**
+   * updated状態の更新を要求
+   */
+  requestUpdate(updated: boolean): void;
 
-  requestLoadGame(game: MasaoJSONFormat): void;
+  requestLoadGame(game: MasaoJSONFormat, newflag: boolean): void;
 
   requestError(message: string): void;
   requestCloseError(): void;
@@ -115,6 +121,7 @@ export default class EditorComponent extends React.Component<
       requestFile,
       requestCloseError,
       requestKey,
+      requestUpdate,
       mode,
       media,
       game,
@@ -185,6 +192,10 @@ export default class EditorComponent extends React.Component<
           />
         </div>
         <div className={styles.content}>
+          <StatusBar
+            saving={game.saving}
+            title={getGameTitleFromMetadata(game.metadata)}
+          />
           <div className={styles.editor}>
             <MasaoEditorCore
               ref={e => (this.core = e)}
@@ -196,6 +207,8 @@ export default class EditorComponent extends React.Component<
               fit-y
               keyDisabled={subpain != null}
               onCommand={this.handleCommand}
+              onUpdateFlag={requestUpdate}
+              updateFlag={game.saving !== 'saved'}
             />
           </div>
           {subpain}
@@ -294,7 +307,7 @@ export default class EditorComponent extends React.Component<
             return;
           }
           // gameがあった
-          requestLoadGame(game);
+          requestLoadGame(game, false);
         },
         er => {
           requestError(String(er));
@@ -310,6 +323,7 @@ export default class EditorComponent extends React.Component<
         version: 'fx16',
         params: masao.param.addDefaults({}),
       }),
+      true,
     );
   }
   /**

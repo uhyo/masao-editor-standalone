@@ -6,7 +6,13 @@ export type GameMetadata = MasaoJSONFormat['metadata'];
  * ゲームのデータからゲームのタイトルを取得
  */
 export function getGameTitle(game: MasaoJSONFormat): string {
-  return (game.metadata && game.metadata.title) || '無題';
+  return getGameTitleFromMetadata(game.metadata);
+}
+
+export function getGameTitleFromMetadata(
+  metadata: GameMetadata | undefined,
+): string {
+  return (metadata && metadata.title) || '無題';
 }
 
 /**

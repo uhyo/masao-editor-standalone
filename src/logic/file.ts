@@ -103,6 +103,7 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
                   type: 'load-game',
                   id,
                   game,
+                  new: false,
                 });
               }
             };
@@ -165,6 +166,11 @@ const loadLastLogic = createLogic<LoadLastAction>({
                 metadata: extractMetadata(game),
                 game,
               });
+              dispatch({
+                type: 'game-update-saving',
+                saving: 'saved',
+              });
+
               resolve();
             };
             req.onerror = reject;

@@ -20,6 +20,16 @@
   top: 0;
 }
 
+.status-bar {
+  flex: auto 0 0;
+  background-color: var(--toolbar-surface);
+  border-bottom: 1px solid var(--toolbar-line-color);
+  padding: 3px;
+
+  font-size: 0.9em;
+  text-align: right;
+}
+
 .editor {
   flex: auto 1 0;
   display: flex;

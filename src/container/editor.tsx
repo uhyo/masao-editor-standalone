@@ -65,11 +65,18 @@ export default connect(
         game,
       });
     },
-    requestLoadGame(game: MasaoJSONFormat) {
+    requestUpdate(updated: boolean) {
+      dispatch({
+        type: 'game-update-saving',
+        saving: updated ? 'updated' : 'saved',
+      });
+    },
+    requestLoadGame(game: MasaoJSONFormat, newflag: boolean) {
       dispatch({
         type: 'load-game',
         id: undefined,
         game,
+        new: newflag,
       });
       dispatch({
         type: 'main-screen',

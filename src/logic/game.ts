@@ -1,9 +1,24 @@
 import { createLogic } from './redux';
-import { GotGameAction } from '../action/game';
+import { LoadGameAction, GotGameAction } from '../action/game';
 import randomString from '../util/random-string';
 import { getAugment } from '../game/format';
 
 import { LAST_ID_KEY } from './db';
+
+/**
+ * ゲームがロードされたら保存済状態に戻すロジック
+ */
+const loadGameLogic = createLogic<LoadGameAction>({
+  type: 'load-game',
+  process({ action }, dispatch, done) {
+    dispatch({
+      type: 'game-update-saving',
+      saving: action.new ? 'no' : 'saved',
+    });
+    done();
+  },
+});
+
 /**
  * ゲームからIDを抽出するロジック
  */
@@ -37,4 +52,4 @@ const getGameId = createLogic<GotGameAction>({
   },
 });
 
-export default [getGameId];
+export default [loadGameLogic, getGameId];
