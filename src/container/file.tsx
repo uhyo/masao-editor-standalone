@@ -21,6 +21,7 @@ export default connect(
         id: undefined,
         game,
         new: false,
+        gotoMain: false,
       });
     },
     requestFileOpen(file: BrowserFile) {
@@ -30,10 +31,7 @@ export default connect(
         id: undefined,
         game: file.data,
         new: false,
-      });
-      // メイン画面に戻る
-      dispatch({
-        type: 'main-screen',
+        gotoMain: true,
       });
     },
     requestFileDelete(file: BrowserFile) {

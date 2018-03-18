@@ -100,10 +100,15 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
               if (currentId === id) {
                 // 現在開いているファイルが更新された
                 dispatch({
+                  type: 'game-update-saving',
+                  saving: 'saved',
+                });
+                dispatch({
                   type: 'load-game',
                   id,
                   game,
                   new: false,
+                  gotoMain: false,
                 });
               }
             };

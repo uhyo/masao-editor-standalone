@@ -23,6 +23,10 @@ export interface LoadGameAction {
    * このゲームが新規かどうかのフラグ
    */
   new: boolean;
+  /**
+   * 開いたらメインスクリーンに移動するフラグ
+   */
+  gotoMain: boolean;
 }
 
 // logicの後

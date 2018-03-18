@@ -77,9 +77,7 @@ export default connect(
         id: undefined,
         game,
         new: newflag,
-      });
-      dispatch({
-        type: 'main-screen',
+        gotoMain: true,
       });
     },
     requestError(message: string) {

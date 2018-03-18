@@ -360,6 +360,10 @@ export default class EditorComponent extends React.Component<
     }
   }
   private handleBeforeUnload(e: Event) {
-    return ((e as any).returnValue = '現在編集中の内容は保存されません。');
+    if (this.props.game.saving !== 'saved') {
+      return ((e as any).returnValue = '現在編集中の内容は保存されません。');
+    } else {
+      return undefined;
+    }
   }
 }
