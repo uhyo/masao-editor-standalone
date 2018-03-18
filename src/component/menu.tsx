@@ -29,6 +29,10 @@ interface IPropMenu {
    * キー設定画面の表示をリクエスト
    */
   requestKey(): void;
+  /**
+   * ファイルを開くのをリクエスト
+   */
+  requestFileOpen(): void;
 
   requestNewGame(): void;
   requestSave(): void;
@@ -45,6 +49,7 @@ export default class MenuComponent extends React.PureComponent<IPropMenu, {}> {
       requestResource,
       requestFile,
       requestKey,
+      requestFileOpen,
 
       requestNewGame,
       requestSave,
@@ -69,6 +74,9 @@ export default class MenuComponent extends React.PureComponent<IPropMenu, {}> {
         <div className={styles.separator} />
         <div onClick={requestNewGame} className={styles.button}>
           新規
+        </div>
+        <div onClick={requestFileOpen} className={styles.button}>
+          開く
         </div>
         <div onClick={requestSave} className={styles.button}>
           上書き保存

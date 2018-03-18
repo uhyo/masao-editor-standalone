@@ -11,6 +11,7 @@ import { GameData } from '../reducer/game';
 import { ErrorData } from '../reducer/error';
 import { MasaoJSONFormat } from '../game/format';
 import { getGameTitleFromMetadata } from '../game/metadata';
+import { fileOpenDialog } from '../util/file-open';
 
 import MasaoEditorCore, {
   EditState,
@@ -90,6 +91,7 @@ export default class EditorComponent extends React.Component<
     this.handleJSONSave = this.handleJSONSave.bind(this);
     this.handleHTMLSave = this.handleHTMLSave.bind(this);
     this.handleNewGame = this.handleNewGame.bind(this);
+    this.handleFileOpen = this.handleFileOpen.bind(this);
 
     this.handleCommand = this.handleCommand.bind(this);
     this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
@@ -212,6 +214,7 @@ export default class EditorComponent extends React.Component<
             requestFile={requestFile}
             requestTestplay={this.handleTestplay}
             requestKey={requestKey}
+            requestFileOpen={this.handleFileOpen}
             requestSave={this.handleBrowserSave}
             requestJSONSave={this.handleJSONSave}
             requestHTMLSave={this.handleHTMLSave}
@@ -351,6 +354,14 @@ export default class EditorComponent extends React.Component<
       }),
       true,
     );
+  }
+  /**
+   * Handle a file open button.
+   */
+  protected handleFileOpen() {
+    fileOpenDialog('application/json, text/html').then(files => {
+      this.handleFileAccept(files);
+    });
   }
   /**
    * Handle a command from the editor.
