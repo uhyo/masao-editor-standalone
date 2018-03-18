@@ -52,6 +52,7 @@ export default connect(
         type: 'file-save-in-browser',
         id: file.id,
         game: file.data,
+        reload: true,
       });
     },
   }),

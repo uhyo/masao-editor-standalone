@@ -63,6 +63,7 @@ export default connect(
         type: 'file-save-in-browser',
         id,
         game,
+        forceRerender: false,
       });
     },
     requestBackup(game: MasaoJSONFormat) {

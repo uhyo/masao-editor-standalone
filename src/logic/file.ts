@@ -73,7 +73,7 @@ const loadFileLogic = createLogic<LoadFilesAction>({
  */
 const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
   type: 'file-save-in-browser',
-  process({ action: { id, game }, getState }, dispatch, done) {
+  process({ action: { id, game, reload }, getState }, dispatch, done) {
     openDatabase()
       .then(
         db =>
@@ -112,13 +112,15 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
                   type: 'game-update-saving',
                   saving: 'saved',
                 });
-                dispatch({
-                  type: 'load-game',
-                  id,
-                  game,
-                  new: false,
-                  gotoMain: false,
-                });
+                if (reload) {
+                  dispatch({
+                    type: 'load-game',
+                    id,
+                    game,
+                    new: false,
+                    gotoMain: false,
+                  });
+                }
               }
             };
             res.onerror = reject;

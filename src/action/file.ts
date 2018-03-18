@@ -39,6 +39,10 @@ export interface SaveInBrowserAction {
    * ゲームデータ
    */
   game: MasaoJSONFormat;
+  /**
+   * データのリロードが必要なフラグ
+   */
+  reload: boolean;
 }
 
 /**
