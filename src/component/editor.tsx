@@ -54,6 +54,10 @@ interface IPropEditorComponent {
    */
   requestSaveInBrowser(id: string, game: MasaoJSONFormat): void;
   /**
+   * バックアップの作成を要求
+   */
+  requestBackup(game: MasaoJSONFormat): void;
+  /**
    * updated状態の更新を要求
    */
   requestUpdate(updated: boolean): void;
@@ -74,6 +78,10 @@ export default class EditorComponent extends React.Component<
    * Ref to MasaoEditorCore
    */
   protected core: MasaoEditorCore | null = null;
+  /**
+   * timer of backup script.
+   */
+  protected backupTimer: any = undefined;
   constructor(props: IPropEditorComponent) {
     super(props);
     this.handleTestplay = this.handleTestplay.bind(this);
@@ -104,6 +112,13 @@ export default class EditorComponent extends React.Component<
     this.setState({
       keyBinding,
     });
+
+    // バックアップのタイマーを登録
+    this.backupTimer = setInterval(() => {
+      if (this.props.game.saving !== 'saved') {
+        this.props.requestBackup(this.generateGame());
+      }
+    }, 30000);
   }
   componentWillUnmount() {
     if (process.env.NODE_ENV === 'production') {
@@ -112,6 +127,10 @@ export default class EditorComponent extends React.Component<
         this.handleBeforeUnload,
         false,
       );
+    }
+    if (this.backupTimer != null) {
+      clearInterval(this.backupTimer);
+      this.backupTimer = undefined;
     }
   }
   render() {
@@ -199,7 +218,6 @@ export default class EditorComponent extends React.Component<
           <div className={styles.editor}>
             <MasaoEditorCore
               ref={e => (this.core = e)}
-              backupId="standalone_editor"
               filename_mapchip={filename_mapchip}
               filename_pattern={filename_pattern}
               defaultGame={game.game}

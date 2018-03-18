@@ -64,6 +64,14 @@ export interface SetEditingAction {
   id: string | undefined;
 }
 
+/**
+ * 現在の状態をバックアップするアクション
+ */
+export interface BackupAction {
+  type: 'file-backup';
+  game: MasaoJSONFormat | undefined;
+}
+
 // ----- logicの後 -----
 
 /**
@@ -86,5 +94,6 @@ export type FileActions =
   | LoadLastAction
   | DeleteFileAction
   | SetEditingAction
+  | BackupAction
   | LoadStartedAction
   | GotFilesAction;

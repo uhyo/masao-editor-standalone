@@ -65,6 +65,12 @@ export default connect(
         game,
       });
     },
+    requestBackup(game: MasaoJSONFormat) {
+      dispatch({
+        type: 'file-backup',
+        game,
+      });
+    },
     requestUpdate(updated: boolean) {
       dispatch({
         type: 'game-update-saving',

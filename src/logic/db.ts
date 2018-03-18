@@ -35,6 +35,11 @@ export const FINGERPRINT_KEY = '_masaoeditor_fingerprint';
 export const LAST_ID_KEY = '_masaoeditor_last_id';
 
 /**
+ * Key of localStorage for temporal backup.
+ */
+export const BACKUP_KEY = '_masaoeditor_backup';
+
+/**
  * Open the database.
  */
 export function openDatabase(): Promise<IDBDatabase> {

@@ -14,7 +14,7 @@ const loadGameLogic = createLogic<LoadGameAction>({
   type: 'load-game',
   validate({ action, getState }, allow, reject) {
     const { game: { metadata, saving } } = getState();
-    if (saving !== 'saved') {
+    if (saving === 'updated') {
       const title = getGameTitleFromMetadata(metadata);
       const res = confirm(
         `「${title}」は保存されていません。別のステージを開いてよろしいですか？`,

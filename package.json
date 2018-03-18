@@ -23,7 +23,6 @@
   "author": "uhyo",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^9.4.7",
     "@types/react": "^16.0.40",
     "@types/react-dom": "^16.0.4",
     "autoprefixer": "^8.1.0",

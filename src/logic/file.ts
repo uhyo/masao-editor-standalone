@@ -3,6 +3,7 @@ import {
   BrowserFile,
   LoadFilesAction,
   SaveInBrowserAction,
+  BackupAction,
   LoadLastAction,
   DeleteFileAction,
 } from '../action/file';
@@ -15,6 +16,7 @@ import {
   OS_FILE,
   IDX_FILE_LASTMODIFIED,
   LAST_ID_KEY,
+  BACKUP_KEY,
   openDatabase,
 } from './db';
 
@@ -99,6 +101,13 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
               }
               if (currentId === id) {
                 // 現在開いているファイルが更新された
+
+                // のでバックアップは削除
+                dispatch({
+                  type: 'file-backup',
+                  game: undefined,
+                });
+                // 保存済状態に変更
                 dispatch({
                   type: 'game-update-saving',
                   saving: 'saved',
@@ -131,10 +140,21 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
 const loadLastLogic = createLogic<LoadLastAction>({
   type: 'file-load-last',
   process({ getState }, dispatch, done) {
-    // localStorageから読む
+    const backup = localStorage.getItem(BACKUP_KEY);
+    if (backup != null) {
+      // バックアップがあった
+      const game = JSON.parse(backup);
+      dispatch({
+        type: 'load-game',
+        id: undefined,
+        game,
+        new: true,
+        gotoMain: false,
+      });
+      return;
+    }
+    // localStorageから最後に開いていたやつを読み込む
     const lastid = localStorage.getItem(LAST_ID_KEY);
-
-    console.log('lastid', lastid);
 
     if (!lastid) {
       // ないよ
@@ -235,10 +255,28 @@ const deleteFileLogic = createLogic<DeleteFileAction>({
   },
 });
 
+/**
+ * 現在編集中のやつをバックアップする
+ */
+const backupLogic = createLogic<BackupAction>({
+  type: 'file-backup',
+  process({ action: { game } }, _, done) {
+    if (game == null) {
+      // この場合はバックアップを削除
+      localStorage.removeItem(BACKUP_KEY);
+    } else {
+      // バックアップをlocalStorageに保存
+      localStorage.setItem(BACKUP_KEY, JSON.stringify(game));
+    }
+    done();
+  },
+});
+
 // export all logics.
 export default [
   loadFileLogic,
   saveInBrowserLogic,
   loadLastLogic,
   deleteFileLogic,
+  backupLogic,
 ];
