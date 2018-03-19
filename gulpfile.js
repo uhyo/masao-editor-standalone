@@ -87,6 +87,7 @@ gulp.task('server', () => {
       livereload: true,
       directoryListing: false,
       open: false,
+      host: '0.0.0.0',
       port: 8000,
       // https: true,
     }),
