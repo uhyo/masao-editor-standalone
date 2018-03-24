@@ -191,7 +191,7 @@ const defaultGame = format.make({
     filename_gameover: 'gameover.gif',
     filename_pattern: 'pattern.gif',
     SENDHIONLY: 'false',
-    se_switch: '1',
+    se_switch: '2',
     se_filename: '1',
   },
   version: 'fx16',

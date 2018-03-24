@@ -257,7 +257,9 @@ export default class EditorComponent extends React.Component<
       throw new Error('Cannot generate game');
     }
     const game1 = core.getCurrentGame();
-    game1.params = addResource('save', game1.params, this.props.media);
+    game1.params = masao.param.cutDefaults(
+      addResource('save', game1.params, this.props.media),
+    );
 
     const game = addEditorInfo(game1, {
       id: gameData.id,

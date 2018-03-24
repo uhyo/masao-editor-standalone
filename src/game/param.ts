@@ -28,7 +28,9 @@ export function addResource(
   for (let key of param.resourceKeys) {
     const d = media.data[key];
     if (d == null) {
-      adds[key] = defaults[key] || '';
+      if (defaults[key]) {
+        adds[key] = defaults[key];
+      }
     } else {
       if (mode === 'testplay') {
         adds[key] = d.url || defaults[key] || '';
