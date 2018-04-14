@@ -262,6 +262,10 @@ export default class EditorComponent extends React.Component<
         addResource('save', game1.params, this.props.media),
       ),
     );
+    const advmap = game1['advanced-map'];
+    if (advmap != null) {
+      game1['advanced-map'] = masao.param.minimizeAdvancedData(advmap);
+    }
 
     const game = addEditorInfo(game1, {
       id: gameData.id,
