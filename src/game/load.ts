@@ -48,7 +48,7 @@ function loadText(file: File): Promise<string> {
 
     reader.onerror = reject;
     reader.onload = () => {
-      resolve(reader.result);
+      resolve(reader.result as string);
     };
     reader.readAsText(file);
   });

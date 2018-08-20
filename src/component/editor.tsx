@@ -199,7 +199,7 @@ export default class EditorComponent extends React.Component<
     const filename_pattern = urlFor(media, 'filename_pattern', 'pattern.gif');
     const filename_mapchip = urlFor(media, 'filename_mapchip', 'mapchip.gif');
     // エディタはゲームを初期ロードするまで表示しない
-    const editorStyle = game.loaded
+    const editorStyle: React.CSSProperties = game.loaded
       ? {}
       : {
           visibility: 'hidden',
