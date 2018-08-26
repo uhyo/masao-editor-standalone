@@ -359,6 +359,14 @@ export default class EditorComponent extends React.Component<
       masao.format.make({
         version: 'fx16',
         params: masao.param.addDefaults({}),
+        'advanced-map': {
+          stages: [
+            {
+              size: { x: 180, y: 30 },
+              layers: [],
+            },
+          ],
+        },
       }),
       true,
     );
