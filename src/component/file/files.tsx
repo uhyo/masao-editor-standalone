@@ -67,51 +67,58 @@ export class FileList extends React.Component<IPropFileList, IStateFileList> {
 
     return (
       <div>
-        {files.map(file => {
-          // ファイル名
-          const name = getGameTitle(file.data);
-          // このファイルの情報を編集中か
-          const ed = editingfile === file.id;
-          if (ed) {
-            return (
-              <div
-                key={file.id}
-                className={`${styles.filebox} ${styles.editing}`}
-              >
-                <MetadataEdit file={file} onSave={onSaveOnBrowser} />
-              </div>
-            );
-          } else {
-            return (
-              <div
-                key={file.id}
-                className={styles.filebox}
-                onDoubleClick={() => onOpenFile(file)}
-              >
-                <div className={styles.filename}>
-                  {name}
-                  {current === file.id ? <b>編集中</b> : null}
+        {files.length === 0 ? (
+          <p>
+            ブラウザに保存されているファイルはまだありません。「上書き保存」（Ctrl+S）でブラウザ上にファイルを保存できます。
+          </p>
+        ) : (
+          files.map(file => {
+            // ファイル名
+            const name = getGameTitle(file.data);
+            // このファイルの情報を編集中か
+            const ed = editingfile === file.id;
+            if (ed) {
+              return (
+                <div
+                  key={file.id}
+                  className={`${styles.filebox} ${styles.editing}`}
+                >
+                  <MetadataEdit file={file} onSave={onSaveOnBrowser} />
                 </div>
-                <div>
-                  最終更新日時：{file.lastModified.toLocaleString('ja-JP')}
-                </div>
-                <div className={styles.controls}>
-                  <div>
-                    <Button onClick={() => onOpenFile(file)}>開く</Button>
+              );
+            } else {
+              return (
+                <div
+                  key={file.id}
+                  className={styles.filebox}
+                  onDoubleClick={() => onOpenFile(file)}
+                >
+                  <div className={styles.filename}>
+                    {name}
+                    {current === file.id ? <b>編集中</b> : null}
                   </div>
                   <div>
-                    <Button onClick={() => onSetEditingFile(file.id)}>
-                      情報編集
-                    </Button>
+                    最終更新日時：
+                    {file.lastModified.toLocaleString('ja-JP')}
                   </div>
-                  <div>
-                    <Button onClick={() => onDeleteFile(file)}>削除</Button>
+                  <div className={styles.controls}>
+                    <div>
+                      <Button onClick={() => onOpenFile(file)}>開く</Button>
+                    </div>
+                    <div>
+                      <Button onClick={() => onSetEditingFile(file.id)}>
+                        情報編集
+                      </Button>
+                    </div>
+                    <div>
+                      <Button onClick={() => onDeleteFile(file)}>削除</Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          }
-        })}
+              );
+            }
+          })
+        )}
       </div>
     );
   }
