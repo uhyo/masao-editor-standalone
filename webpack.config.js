@@ -17,6 +17,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
+        exclude: /node_modules/,
         loader: 'source-map-loader',
         enforce: 'pre',
       },

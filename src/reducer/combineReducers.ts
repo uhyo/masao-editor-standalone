@@ -4,7 +4,7 @@ import { combineReducers as reduxCombineReducers } from 'redux';
 import { Action } from '../action/index';
 
 interface Reducer<S> {
-  (state: S, action: Action): S;
+  (state: S | undefined, action: Action): S;
 }
 
 interface CombineReducersFunction {
