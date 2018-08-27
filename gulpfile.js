@@ -1,3 +1,5 @@
+'use static';
+
 const path = require('path');
 const gulp = require('gulp');
 
@@ -8,7 +10,10 @@ const uglifyComposer = require('gulp-uglify/composer');
 const replace = require('gulp-replace');
 const tcm = require('gulp-typed-css-modules');
 
-const server = require('gulp-server-livereload');
+const connect = require('connect');
+const serveStatic = require('serve-static');
+const connectLivereload = require('connect-livereload');
+const liveReload = require('gulp-livereload');
 
 const webpack = require('webpack');
 
@@ -82,16 +87,13 @@ gulp.task('mc_canvas', ['mc_canvas-static', 'mc_canvas-uglify']);
 
 // ---------- server
 gulp.task('server', () => {
-  gulp.src('dist').pipe(
-    server({
-      livereload: true,
-      directoryListing: false,
-      open: false,
-      host: '0.0.0.0',
-      port: 8000,
-      // https: true,
-    }),
-  );
+  // serve dist files using connect.
+  connect()
+    .use(connectLivereload())
+    .use(serveStatic('dist/'))
+    .listen(8000, '0.0.0.0');
+  // open livereload server.
+  liveReload.listen();
 });
 // ----------
 
@@ -121,6 +123,7 @@ function jsxCompiler(watch) {
         return;
       }
       handleStats(stats, true);
+      liveReload.reload();
     });
   } else {
     return compiler.run((err, stats) => {
