@@ -51,7 +51,7 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-logic": "^0.15.4",
-    "rxjs": "^6.2.2",
+    "rxjs": "^5.5.11",
     "serve-static": "^1.13.2",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.22.1",
@@ -64,8 +64,7 @@
   "dependencies": {
     "@types/react-redux": "^6.0.6",
     "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "rxjs-compat": "^6.2.2"
+    "react-dom": "^16.4.2"
   },
   "repository": {
     "type": "git",
