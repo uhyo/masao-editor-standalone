@@ -28,19 +28,23 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: [
-          'style-loader',
-          'css-loader?modules&camelCase',
-          'postcss-loader',
-        ],
+        use: ['style-loader', 'css-loader?modules&camelCase', 'postcss-loader'],
       },
       {
         test: /\.html$/,
-        loaders: ['ignore-loader', 'file-loader?name=[name].[ext]'],
+        use: ['ignore-loader', 'file-loader?name=[name].[ext]'],
       },
       {
         test: /\.(?:png|gif)$/,
-        loaders: ['url-loader', 'img-loader'],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10240,
+            },
+          },
+          'img-loader',
+        ],
       },
     ],
   },

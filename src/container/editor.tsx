@@ -49,6 +49,11 @@ export default connect(
         type: 'key-screen',
       });
     },
+    requestAbout() {
+      dispatch({
+        type: 'about-screen',
+      });
+    },
     addFiles(resources: Array<ResourceWithoutId>) {
       dispatch({
         type: 'add-resources',

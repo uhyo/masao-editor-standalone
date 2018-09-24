@@ -26,8 +26,16 @@ export interface KeyScreenAction {
   type: 'key-screen';
 }
 
+/**
+ * エディタについて画面を表示するアクション
+ */
+export interface AboutScreenAction {
+  type: 'about-screen';
+}
+
 export type ScreenAction =
   | MainScreenAction
   | ResourceScreenAction
   | FileScreenAction
-  | KeyScreenAction;
+  | KeyScreenAction
+  | AboutScreenAction;

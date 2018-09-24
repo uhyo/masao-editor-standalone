@@ -34,6 +34,7 @@ import { gameToHTML } from '../game/html';
 import { loadFileAsGame } from '../game/load';
 
 import download from '../util/download';
+import AboutScreenComponent from './about';
 
 interface IPropEditorComponent {
   mode: Mode;
@@ -48,6 +49,7 @@ interface IPropEditorComponent {
   requestFile(): void;
   requestTestplay(game: MasaoJSONFormat, startStage: number): void;
   requestKey(): void;
+  requestAbout(): void;
 
   addFiles(resources: Array<ResourceWithoutId>): void;
   /**
@@ -143,6 +145,7 @@ export default class EditorComponent extends React.Component<
       requestFile,
       requestCloseError,
       requestKey,
+      requestAbout,
       requestUpdate,
       mode,
       media,
@@ -174,6 +177,12 @@ export default class EditorComponent extends React.Component<
       subpain = (
         <div className={styles.screen}>
           <KeyScreenComponent binding={keyBinding} />
+        </div>
+      );
+    } else if (mode === 'about') {
+      subpain = (
+        <div className={styles.screen}>
+          <AboutScreenComponent />
         </div>
       );
     }
@@ -214,6 +223,7 @@ export default class EditorComponent extends React.Component<
             requestFile={requestFile}
             requestTestplay={this.handleTestplay}
             requestKey={requestKey}
+            requestAbout={requestAbout}
             requestFileOpen={this.handleFileOpen}
             requestSave={this.handleBrowserSave}
             requestJSONSave={this.handleJSONSave}
