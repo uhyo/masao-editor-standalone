@@ -35,6 +35,7 @@ import { loadFileAsGame } from '../game/load';
 
 import download from '../util/download';
 import AboutScreenComponent from './about';
+import { acceptVersion } from '../game/version';
 
 interface IPropEditorComponent {
   mode: Mode;
@@ -271,6 +272,7 @@ export default class EditorComponent extends React.Component<
       masao.param.cutDefaults(
         addResource('save', game1.params, this.props.media),
       ),
+      acceptVersion(game1.version) !== '2.8',
     );
     const advmap = game1['advanced-map'];
     if (advmap != null) {
