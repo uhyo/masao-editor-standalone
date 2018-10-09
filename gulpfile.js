@@ -17,23 +17,6 @@ const liveReload = require('gulp-livereload');
 
 const webpack = require('webpack');
 
-// ---------- webpack
-gulp.task('jsx', ['css'], () => {
-  return jsxCompiler(false);
-});
-
-gulp.task('watch-jsx', ['css'], () => {
-  return jsxCompiler(true);
-});
-
-// ---------- html
-gulp.task('html', () => {
-  return gulp
-    .src(['./html/*.html'])
-    .pipe(changed('dist/'))
-    .pipe(gulp.dest('dist/'));
-});
-
 // ---------- css
 // typed css modules.
 gulp.task('css', () => {
@@ -46,6 +29,29 @@ gulp.task('css', () => {
       }),
     )
     .pipe(gulp.dest('./src'));
+});
+
+// ---------- webpack
+gulp.task(
+  'jsx',
+  gulp.series('css', () => {
+    return jsxCompiler(false);
+  }),
+);
+
+gulp.task(
+  'watch-jsx',
+  gulp.series('css', () => {
+    return jsxCompiler(true);
+  }),
+);
+
+// ---------- html
+gulp.task('html', () => {
+  return gulp
+    .src(['./html/*.html'])
+    .pipe(changed('dist/'))
+    .pipe(gulp.dest('dist/'));
 });
 
 // ---------- static assets
@@ -83,7 +89,7 @@ gulp.task('mc_canvas-uglify', function() {
     .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('mc_canvas', ['mc_canvas-static', 'mc_canvas-uglify']);
+gulp.task('mc_canvas', gulp.series('mc_canvas-static', 'mc_canvas-uglify'));
 
 // ---------- server
 gulp.task('server', () => {
@@ -97,11 +103,14 @@ gulp.task('server', () => {
 });
 // ----------
 
-gulp.task('default', ['html', 'jsx', 'static', 'mc_canvas']);
-gulp.task('watch', ['html', 'mc_canvas', 'watch-jsx', 'server'], () => {
-  gulp.watch('html/*', ['html']);
-  gulp.watch('src/**/*.css', ['css']);
-});
+gulp.task('default', gulp.series('html', 'jsx', 'static', 'mc_canvas'));
+gulp.task(
+  'watch',
+  gulp.series('html', 'mc_canvas', 'watch-jsx', 'server', () => {
+    gulp.watch('html/*', ['html']);
+    gulp.watch('src/**/*.css', ['css']);
+  }),
+);
 
 // ----------
 //
