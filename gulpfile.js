@@ -34,15 +34,15 @@ gulp.task('css', () => {
 // ---------- webpack
 gulp.task(
   'jsx',
-  gulp.series('css', () => {
-    return jsxCompiler(false);
+  gulp.series('css', cb => {
+    return jsxCompiler(false, cb);
   }),
 );
 
 gulp.task(
   'watch-jsx',
-  gulp.series('css', () => {
-    return jsxCompiler(true);
+  gulp.series('css', cb => {
+    jsxCompiler(true, cb);
   }),
 );
 
@@ -114,7 +114,7 @@ gulp.task(
 
 // ----------
 //
-function jsxCompiler(watch) {
+function jsxCompiler(watch, cb) {
   const compiler = webpack(require('./webpack.config.js'));
 
   const handleStats = (stats, watch) => {
@@ -126,6 +126,7 @@ function jsxCompiler(watch) {
     );
   };
   if (watch) {
+    cb();
     return compiler.watch({}, (err, stats) => {
       if (err) {
         console.error(err);
@@ -141,6 +142,7 @@ function jsxCompiler(watch) {
         return;
       }
       handleStats(stats, false);
+      cb();
     });
   }
 }
