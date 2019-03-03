@@ -1,8 +1,7 @@
 import { Reducer } from 'redux';
 import { Action } from '../action/index';
 import reducer from '../reducer/index';
-
-const reduxLogic: any = require('redux-logic');
+import * as reduxLogic from 'redux-logic';
 
 // wraps react-redux's createLogic
 interface CreateLogic<S> {
@@ -21,13 +20,11 @@ type ProcessFunc<S, A extends Action> =
       dispath: (action: Action) => void,
       done: () => void,
     ) => void)
-  | ((
-      obj: {
-        getState: GetStateFunc<S>;
-        action: A;
-        cancelled$: any;
-      },
-    ) => Action | Promise<Action>);
+  | ((obj: {
+      getState: GetStateFunc<S>;
+      action: A;
+      cancelled$: any;
+    }) => Action | Promise<Action>);
 interface LogicDefinitionBase<S, A extends Action> {
   cancelType?: '*' | SingleTypeName | Array<SingleTypeName>;
   debounce?: number;
@@ -80,7 +77,7 @@ type SingleLogicDefinition<S, A extends Action> = LogicDefinitionBase<S, A> & {
 };
 
 function makeCreateLogic<S>(_reducer: Reducer<S>): CreateLogic<S> {
-  return reduxLogic.createLogic;
+  return reduxLogic.createLogic as CreateLogic<S>;
 }
 
 export const createLogic = makeCreateLogic(reducer);

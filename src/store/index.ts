@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { createStore, Store, Reducer, applyMiddleware } from 'redux';
 import { connect as reduxConnect } from 'react-redux';
-
-const reduxLogic: any = require('redux-logic');
+import * as reduxLogic from 'redux-logic';
 
 import { Action } from '../action/index';
 

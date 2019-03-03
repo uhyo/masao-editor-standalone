@@ -106,7 +106,7 @@ const addResourcesLogic = createLogic<AddResourcesAction>({
                 // keyが発行された
                 results.push({
                   ...resource,
-                  id: req.result,
+                  id: req.result as number,
                 });
               };
               req.onerror = er => {
@@ -178,7 +178,9 @@ const setMediaLogic = createLogic<SetMediaAction>({
       return;
     }
     // urlを取得したい
-    const { resource: { resources } } = getState();
+    const {
+      resource: { resources },
+    } = getState();
     let ourl: string | null = null;
     for (let { id, blob } of resources) {
       if (id === key) {

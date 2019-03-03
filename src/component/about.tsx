@@ -5,6 +5,7 @@ import * as styles from './css/about.css';
 import { Command, commandNames } from 'masao-editor-core';
 
 // load logo file.
+declare const require: any;
 const logoImg = require('../../static/meme-logo.png');
 
 export default class AboutScreenComponent extends React.PureComponent<{}, {}> {

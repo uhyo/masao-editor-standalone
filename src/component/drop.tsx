@@ -60,7 +60,7 @@ export default class DropComponent extends React.Component<
   private handleDragEnter(e: DragEvent) {
     // ファイル以外は無視
     const dt = e.dataTransfer;
-    if (this.state.open) {
+    if (this.state.open || !dt) {
       return;
     }
     if (!Array.from(dt.items).some(({ kind }) => kind === 'file')) {
