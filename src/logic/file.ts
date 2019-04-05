@@ -92,7 +92,10 @@ const saveInBrowserLogic = createLogic<SaveInBrowserAction>({
               // これが最新なのでlocalStorageにIDを保存
               localStorage.setItem(LAST_ID_KEY, id);
               resolve();
-              const { game: { id: currentId }, file: { status } } = getState();
+              const {
+                game: { id: currentId },
+                file: { status },
+              } = getState();
               if (status === 'loading') {
                 // 再ロードする
                 dispatch({
@@ -161,7 +164,9 @@ const loadLastLogic = createLogic<LoadLastAction>({
     if (!lastid) {
       // ないよ
       // 初期状態のを表示するためにgot-gameを走らせる
-      const { game: { id, metadata, game } } = getState();
+      const {
+        game: { id, metadata, game },
+      } = getState();
       dispatch({
         type: 'got-game',
         id,
@@ -249,7 +254,9 @@ const deleteFileLogic = createLogic<DeleteFileAction>({
             const res = store.delete(action.file.id);
             res.onsuccess = () => {
               resolve();
-              const { file: { status } } = getState();
+              const {
+                file: { status },
+              } = getState();
               if (status === 'loaded') {
                 // 再ロード
                 dispatch({

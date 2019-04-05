@@ -13,7 +13,9 @@ import { OS_RESOURCE, LAST_ID_KEY, openDatabase } from './db';
 const loadGameLogic = createLogic<LoadGameAction>({
   type: 'load-game',
   validate({ action, getState }, allow, reject) {
-    const { game: { metadata, saving } } = getState();
+    const {
+      game: { metadata, saving },
+    } = getState();
     if (saving === 'updated') {
       const title = getGameTitleFromMetadata(metadata);
       const res = confirm(
@@ -112,15 +114,14 @@ const loadGameLogic = createLogic<LoadGameAction>({
       });
       p = Promise.resolve();
     }
-    p
-      .then(() => {
-        if (action.gotoMain) {
-          // main画面に移動
-          dispatch({
-            type: 'main-screen',
-          });
-        }
-      })
+    p.then(() => {
+      if (action.gotoMain) {
+        // main画面に移動
+        dispatch({
+          type: 'main-screen',
+        });
+      }
+    })
       .catch(er => dispatch({ type: 'error', message: String(er) }))
       .then(done);
   },
@@ -132,7 +133,9 @@ const loadGameLogic = createLogic<LoadGameAction>({
 const getGameId = createLogic<GotGameAction>({
   type: 'got-game',
   transform({ action: { game }, getState }, next) {
-    const { resource: { fingerprint } } = getState();
+    const {
+      resource: { fingerprint },
+    } = getState();
     const aug = getAugment(game);
     // gameにidが書いてあるか?
     let id;

@@ -248,7 +248,7 @@ export default class EditorComponent extends React.Component<
               keyDisabled={subpain != null}
               onCommand={this.handleCommand}
               onUpdateFlag={requestUpdate}
-              updateFlag={game.saving !== 'saved'}
+              updateFlag={game.saving === 'updated'}
             />
           </div>
           {subpain}
